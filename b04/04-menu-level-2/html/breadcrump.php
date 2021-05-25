@@ -26,4 +26,4 @@ if($activePage == 'index'){
 ?>
 <div class="breadcrumb">
     <?php echo $xhtml; ?>
-</div>
+</div>  
