@@ -26,6 +26,12 @@ $arrMenu = [
     ],
     'contact' => ["name" => "Contact", "link" => "contact.php"]
 ];
+$xhtml = '';
+foreach($arrMenu as $keyLevelOne => $valueLevelOne){
+    $xhtml .= $valueLevelOne['name'] . ' - ';
+}
+$xhtml = substr($xhtml,0,-3);
+echo $xhtml;
 
     // Yêu cầu: In ra tên của các menu cấp 1, 
     // Output: Home - About - Contact

@@ -27,5 +27,19 @@ $arrMenu = [
     'contact' => ["name" => "Contact", "link" => "contact.php"]
 ];
 
+$xhtml = '';
+foreach($arrMenu as $keyLevelOne => $valueLevelOne){
+    if(isset($valueLevelOne['child'])){
+        foreach($valueLevelOne['child'] as $keyLevelTwo => $valueLevelTwo){
+            if(isset($valueLevelTwo['child'])){
+                foreach($valueLevelTwo['child'] as $keyLevelThree => $valueLevelThree){
+                    $xhtml .= $valueLevelThree['name'].' - ';
+                }
+            }
+        }
+    }
+}
+$xhtml = substr($xhtml,0,-3);
+echo $xhtml;
     // Yêu cầu: In ra tên của các menu cấp 3
     // Output: Sale - Training - Toyota

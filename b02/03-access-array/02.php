@@ -27,4 +27,6 @@ $arrMenu = [
     'contact' => ["name" => "Contact", "link" => "contact.php"]
 ];
 
+echo count($arrMenu['about']['child']['service']['child']);
+
         // Yêu cầu: Hãy in ra tổng số menu con của menu Service

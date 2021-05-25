@@ -26,5 +26,8 @@ $arrMenu = [
     ],
     'contact' => ["name" => "Contact", "link" => "contact.php"]
 ];
+$arrLinkToyota = $arrMenu['about']['child']['company']['child']['toyota']['link'] = 'xe-toyota.com';
+
+echo $arrLinkToyota;
 
     // Yêu cầu: Sửa link cho menu Toyata thành xe-toyota.com

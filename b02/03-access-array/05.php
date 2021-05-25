@@ -32,6 +32,16 @@ $arrMenu = [
         ]
     ]
 ];
+$xhtml = '';
+foreach($arrMenu as $keyLevelOne => $valueLevelOne){
+    if(isset($valueLevelOne['child'])){
+        foreach($valueLevelOne['child'] as $keyLevelTwo => $valueLevelTwo){
+            $xhtml .= $valueLevelTwo['name'].' - ';
+        }
+    }
+}
+$xhtml = substr($xhtml,0,-3);
+echo $xhtml;
 
     // Yêu cầu: In ra tên của các menu cấp 2, 
     // Output: Service - Company - Hotline

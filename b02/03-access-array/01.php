@@ -39,3 +39,4 @@ $arrMenu = [
 
 
     // Yêu cầu Hãy in ra link của menu Training
+echo $arrMenu['about']['child']['service']['child']['training']['link'];
