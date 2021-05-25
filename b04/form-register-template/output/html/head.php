@@ -1,5 +1,5 @@
-<?php
-echo '<!-- Required meta tags-->
+
+<!-- Required meta tags-->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="Colorlib Templates">
@@ -20,4 +20,4 @@ echo '<!-- Required meta tags-->
         <link href="vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
 
         <!-- Main CSS-->
-        <link href="css/main.css" rel="stylesheet" media="all">" ';
+        <link href="css/main.css" rel="stylesheet" media="all">" 

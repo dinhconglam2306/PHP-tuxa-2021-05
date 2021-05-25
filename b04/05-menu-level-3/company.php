@@ -2,29 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>Index Menu Level 2</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+<?php require_once 'html/head.php'; ?>
 </head>
 
 <body>
-    <div class="menuBackground">
-        <div class="center">
-            <?php
-                include 'menu.php';
-            ?>
-        </div>
-    </div>
-    <div class="breadcrumb">
-        <a href="index.php">Home</a>
-        <span>></span>
-        <a href="about.php">About</a>
-        <span>></span>
-        <a href="company.php">Company</a>
-        <span>></span>
-        <span>Toyota</span>
-    </div>
-    <h3>Toyota</h3>
+    <?php  require_once 'html/menu.php';?>
+    <?php  require_once 'html/breadcrump.php';?>
+    <h3>Company</h3>
 </body>
 
 </html>
