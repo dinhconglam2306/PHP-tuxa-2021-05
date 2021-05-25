@@ -7,12 +7,16 @@ if($activePage == 'index'){
     $xhtml = '<span>Home</span>';
 }else{
     if(count($breadcrumbArrChild) >= 2){
+        $xhtmlLevel2 = '';
         foreach($breadcrumbArrChild as $key =>$value){
-            $link = strtolower($breadcrumbArrChild[0]);
-            $xhtml = sprintf('<a href="index.php">Home</a>
-                                <span>><a href="%s.php">%s</a><span> > </span></span>
-                     <span>%s</span>',$link,$breadcrumbArrChild[0],$value);
+           
+            if($key == count($breadcrumbArrChild)-1){
+                $xhtmlLevel2.= '<span>'.$value.'</span>';
+            }else{
+                $xhtmlLevel2.= '<a href="'.strtolower($value.".php").'">'.$value.'</a>'. ' > ';
+            }
         }
+        $xhtml=  '<a href="index.php">Home</a>'.' > '.$xhtmlLevel2;
     }else{
         $xhtml = sprintf('<a href="index.php">Home</a>
                     <span>></span>
