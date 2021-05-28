@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <?php require_once 'html/head.php' ?>
-</head>
-<body>
-    <?php  require_once 'libs/my-func.php';
+<?php  require_once 'libs/my-func.php';
     $arrJob = ['Developer','Teacher','Student'];
     $arrSex = ['Other','Male','Female'];
 
     $arrFull=[
-        createSelecBox("job","Job",$arrJob),
-        createSelecBox("sex","Sex",$arrSex),
+        createSelectBox("job","Job",$arrJob),
+        createSelectBox("sex","Sex",$arrSex),
         createInput("text","Fullname","name"),
         createInput("mail","Email","mail"),
         createInput("text","Age","age"),
@@ -22,6 +15,13 @@
         $txtFull.= '<div class="input-group"> '.$value.'</div>';
     }
     ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <?php require_once 'html/head.php' ?>
+</head>
+<body>
     <div class="page-wrapper bg-red p-t-180 p-b-100 font-robo">
         <div class="wrapper wrapper--w960">
             <div class="card card-2">

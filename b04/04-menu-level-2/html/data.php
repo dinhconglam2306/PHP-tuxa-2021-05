@@ -30,16 +30,16 @@ $activePage = basename($_SERVER['PHP_SELF'], ".php");
 $breadcrumbArr = [];
 
 foreach ($arrMenu as $keyLevelOne => $valueLevelOne) {
-    $breadcrumbArr[$keyLevelOne][] = $valueLevelOne['name'];
+    $breadcrumbArr[$keyLevelOne][] = ['name' => $valueLevelOne['name'], 'link' => $valueLevelOne['link']];
     if (isset($valueLevelOne['child'])) {
         foreach ($valueLevelOne['child'] as $keyLevelTwo => $valueLevelTwo) {
-            $breadcrumbArr[$keyLevelTwo][] = $valueLevelOne['name'];
-            $breadcrumbArr[$keyLevelTwo][] = $valueLevelTwo['name'];
+            $breadcrumbArr[$keyLevelTwo][] = ['name' => $valueLevelOne['name'], 'link' => $valueLevelOne['link']];
+            $breadcrumbArr[$keyLevelTwo][] =['name' => $valueLevelTwo['name'], 'link' => $valueLevelTwo['link']];
             if (isset($valueLevelTwo['child'])) {
                 foreach ($valueLevelTwo['child'] as $keyLevelThree => $valueLevelThree) {
-                    $breadcrumbArr[$keyLevelThree][] = $valueLevelOne['name'];
-                    $breadcrumbArr[$keyLevelThree][] = $valueLevelTwo['name'];
-                    $breadcrumbArr[$keyLevelThree][] = $valueLevelThree['name'];
+                    $breadcrumbArr[$keyLevelThree][] = ['name' => $valueLevelOne['name'], 'link' => $valueLevelOne['link']];
+                    $breadcrumbArr[$keyLevelThree][] = ['name' => $valueLevelTwo['name'], 'link' => $valueLevelTwo['link']];
+                    $breadcrumbArr[$keyLevelThree][] = ['name' => $valueLevelThree['name'], 'link' => $valueLevelThree['link']];
                 }
             }
         }
