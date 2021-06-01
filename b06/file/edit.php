@@ -13,6 +13,11 @@
             });
         });
     </script>
+    <style>
+        img {
+            width: 300px;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,10 +28,6 @@
     $id    = $_GET['id'];
     $content    = file_get_contents("./files/$id.txt");
     $content    = explode('||', $content);
-
-    echo '<pre>';
-    print_r($content);
-    echo '</pre>';
     $title                = $content[0];
     $description        = $content[1];
     $fileUpload         = $content[2];
@@ -50,8 +51,8 @@
         if (checkLength($description, 10, 5000)) $errorDescription .= '<p class="error">Nội dung dài từ 10 đến 5000 ký tự</p>';
 
         //check file
-        $errorFileUpload = '';
-        if (checkEmpty($fileUpload['name'])) $errorFileUpload =  '<p class="error">Hãy chọn file để upload</p>';
+        // $errorFileUpload = '';
+        // if (checkEmpty($fileUpload['name'])) $errorFileUpload =  '<p class="error">Hãy chọn file để upload</p>';
         // A-Z, a-z, 0-9: AzG09
         if ($errorTitle == '' && $errorDescription == '' &&  $fileUpload['name'] != null) {
             $flagExtension     = checkExtension($fileUpload['name'], explode('|', $configs['extension']));
@@ -63,10 +64,18 @@
                 if (file_put_contents($filename, $data)) {
                     $title            = '';
                     $description    = '';
+                    $fileUpload         = $content[2];
                     $flag            = true;
                 }
-            } else {
-                $errorFileUpload =  '<p class="error">Phần mở rộng file không hợp lệ! Phần mở rộng phải có đuôi jpg|png|mp3|zip</p>';
+            }
+        }else if($errorTitle == '' && $errorDescription == '' &&  $fileUpload['name'] == null){
+            $data    = $title . '||' . $description . '||' . $content[2];
+            $filename    = './files/' . $id . '.txt';
+            if (file_put_contents($filename, $data)) {
+                $title            = '';
+                $fileUpload         = $content[2];  
+                $description    = '';
+                $flag            = true;
             }
         }
     }
@@ -88,6 +97,11 @@
                 </div>
 
                 <div class="row">
+                    <p>Image</p>
+                    <img src="./images/<?= $fileUpload ?>" alt="">
+                </div>
+
+                <div class="row">
                     <p>File</p>
                     <input type="file" name="file-upload" />
                     <?= $errorFileUpload; ?>
@@ -99,7 +113,9 @@
                 </div>
 
                 <?php
-                if ($flag == true) echo '<div class="row"><p>Dữ liệu đã được ghi thành công!</p></div>';
+                if ($flag == true){
+                    header('location:index.php');
+                };
                 ?>
 
             </form>

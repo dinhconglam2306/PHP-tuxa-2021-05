@@ -19,15 +19,18 @@
     <?php
     require_once 'functions.php';
     $configs    = parse_ini_file('config.ini');
+    echo '<pre>';
+    print_r ($configs);
+    echo '</pre>';
 
-    $flag    = false;
+    $flag       = false;
     $errorTitle = $errorDescription = $errorFileUpload = '';
-    $title    = $description    = '';
+    $title      = $description    = '';
     if (isset($_POST['title']) && isset($_POST['description']) && isset($_FILES['file-upload'])) {
-        $title            = $_POST['title'];
-        $description    = $_POST['description'];
-        $fileUpload = $_FILES['file-upload'];
-
+        $title              = $_POST['title'];
+        $description        = $_POST['description'];
+        $fileUpload         = $_FILES['file-upload'];
+    
 
         // check Title
         $errorTitle = '';
@@ -46,9 +49,10 @@
         // A-Z, a-z, 0-9: AzG09
         if ($errorTitle == '' && $errorDescription == '' &&  $fileUpload['name'] != null) {
 
-            $fileNameImg     = randomStringImg($fileUpload['name'], 7);
-            $flagExtension     = checkExtension($fileUpload['name'], explode('|', $configs['extension']));
-            if ($flagExtension == true) {
+            $fileNameImg         = randomStringImg($fileUpload['name'], 7);
+            $flagExtension       = checkExtension($fileUpload['name'], explode('|', $configs['extension']));
+            $flagSize            = checkSize($fileUpload['size'], $configs['min_size'],$configs['max_size']);
+            if ($flagExtension == true && $flagSize == true) {
                 @move_uploaded_file($fileUpload['tmp_name'], './images/' . $fileNameImg);
                 $data    = $title . '||' . $description . '||' .  $fileNameImg;
                 $name = randomString(5);
@@ -60,6 +64,7 @@
                 }
             } else {
                 $errorFileUpload =  '<p class="error">Phần mở rộng file không hợp lệ! Phần mở rộng phải có đuôi jpg|png|mp3|zip</p>';
+                $errorFileUpload .=  '<p class="error">Hoặc dung lượng file không phù hợp</p>';
             }
         }
     }
@@ -92,7 +97,10 @@
                 </div>
 
                 <?php
-                if ($flag == true) echo '<div class="row"><p>Dữ liệu đã được ghi thành công!</p></div>';
+                if ($flag == true) {
+                    header('Location:index.php');
+                }
+
                 ?>
 
             </form>

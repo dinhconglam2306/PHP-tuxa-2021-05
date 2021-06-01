@@ -13,17 +13,23 @@
             });
         });
     </script>
+    <style>
+    img {
+        width: 300px;
+    }
+    </style>
 </head>
 
 <body>
     <?php
-    $id    = $_GET['id'];
+    $id         = $_GET['id'];
     $content    = file_get_contents("./files/$id.txt");
     $content    = explode('||', $content);
+
     $title                = $content[0];
-    $description        = $content[1];
-    $fileUpload        = $content[2];
-    $image = "./images/$content[2]";
+    $description          = $content[1];
+    $fileUpload           = $content[2];
+    $image                = "./images/$content[2]";
 
     $flag = false;
     if (isset($_POST['id']) && file_exists($image)) {
@@ -52,8 +58,8 @@
                     </div>
 
                     <div class="row">
-                        <p>File</p>
-                        <span><?php echo $fileUpload; ?></span>
+                        <p>Image</p>
+                        <img src="./images/<?php echo $fileUpload ?>" alt="" />
                     </div>
                     <div class="row">
                         <input type="hidden" name="id" value="<?php echo $id; ?>">

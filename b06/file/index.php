@@ -24,9 +24,8 @@
             height: 300px;
             object-fit: cover;
         }
-
-        #wrapper .list .row .name {
-            width: 60%;
+        .content {
+            text-align: center;
         }
     </style>
 </head>
@@ -82,9 +81,11 @@
         // glob(): lấy các file có đuôi là .txt
         $data = glob('*.txt');
         if (empty($data)) {
-            echo '<div id="area-button">
-						<a href="add.php">Add File</a>
-					 </div>';
+            echo sprintf('
+            <div class="content">Hiện tại có %s bài viết. Hãy thêm bài viết!!!</div>
+            <div id="area-button">
+            <a href="add.php">Add File</a>
+            </div>',count($data));
         } else {
             echo '<div id="area-button">
 						<a href="add.php">Add File</a>
