@@ -10,17 +10,17 @@
 
 <body>
     <?php
+    require_once 'define.php';
     $checkbox = '';
     if (isset($_POST['checkbox'])) {
         $checkbox = $_POST['checkbox'];
 
         foreach ($checkbox as $key => $value) {
-            $content    = file_get_contents("./files/$value.txt");
+            $content    = file_get_contents("./".DIR_FILES.$value.".txt");
             $content    = explode('||', $content);
-            $fileUpload         = $content[2];
-            $image = "./images/$content[2]";
-            @unlink($image);
-            @unlink("./files/$value.txt");
+            $imageOniginal        = $content[2];
+            @unlink(DIR_IMAGES.$imageOniginal);
+            @unlink("./".DIR_FILES.$value.".txt");
         }
         echo '<div id="wrapper">
                <div class="title">PHP FILE</div>

@@ -18,12 +18,6 @@
             padding: 10px;
             text-align: right;
         }
-
-        .image-item {
-            width: 200px;
-            height: 300px;
-            object-fit: cover;
-        }
         .content {
             text-align: center;
         }
@@ -37,23 +31,24 @@
             <form action="multy-delete.php" method="post" name="main-form" id="main-form">
                 <?php
                 require_once 'functions.php';
+                require_once 'define.php';
 
-                $data    = scandir('./files');
-                $images = scandir('./images');
+                $data    = scandir(DIR_FILES);
+                $images = scandir(DIR_IMAGES);
 
                 $i = 0;
                 foreach ($data as $key => $value) {
                     if ($value == '.' || $value == '..' || preg_match('#.txt$#imsU', $value) == false) continue;
                     $class        = ($i % 2 == 0) ? 'odd' : 'even';
-                    $content    = file_get_contents("./files/$value");
+                    $content    = file_get_contents(DIR_FILES.$value);
                     $content    = explode('||', $content);
-                    $image = "./images/$content[2]";
-                    $showImg =  '<img src="' . $image . '"  class="image-item"/>';
+                    $image = "./".DIR_IMAGES.$content[2];
+                    $showImg =  '<img style ="max-width : 200px" src="' . $image . '"  class="image-item"/>';
 
                     $tile                = $content[0];
                     $description        = $content[1];
                     $id            = substr($value, 0, 5);
-                    $size        = convertSize(filesize("./files/$value"));
+                    $size        = convertSize(filesize(DIR_FILES.$value));
                 ?>
                     <div class="row <?= $class; ?>">
                         <p class="no">
@@ -77,7 +72,7 @@
         </div>
         <?php
         //chidir: chuyển file làm việc.
-        chdir('./files');
+        chdir(DIR_FILES);
         // glob(): lấy các file có đuôi là .txt
         $data = glob('*.txt');
         if (empty($data)) {

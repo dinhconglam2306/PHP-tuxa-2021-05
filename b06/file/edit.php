@@ -22,6 +22,7 @@
 
 <body>
     <?php
+    error_reporting(E_ALL & ~E_NOTICE);
     require_once 'functions.php';
     $configs    = parse_ini_file('config.ini');
 
@@ -30,11 +31,9 @@
     $content    = explode('||', $content);
     $title                = $content[0];
     $description        = $content[1];
-    $fileUpload         = $content[2];
-    $image = "./images/$content[2]";
-
+    $imageOriginal  = $content[2];
+    $linkImg = "./images/$content[2]";
     $flag    = false;
-    $errorTitle = $errorDescription = $errorFileUpload = '';
     if (isset($_POST['title']) && isset($_POST['description']) && isset($_FILES['file-upload'])) {
         $title            = $_POST['title'];
         $description    = $_POST['description'];
@@ -51,34 +50,39 @@
         if (checkLength($description, 10, 5000)) $errorDescription .= '<p class="error">Nội dung dài từ 10 đến 5000 ký tự</p>';
 
         //check file
-        // $errorFileUpload = '';
-        // if (checkEmpty($fileUpload['name'])) $errorFileUpload =  '<p class="error">Hãy chọn file để upload</p>';
-        // A-Z, a-z, 0-9: AzG09
-        if ($errorTitle == '' && $errorDescription == '' &&  $fileUpload['name'] != null) {
-            $flagExtension     = checkExtension($fileUpload['name'], explode('|', $configs['extension']));
-            if ($flagExtension == true && file_exists($image)) {
-                @unlink($image);
-                @move_uploaded_file($fileUpload['tmp_name'], './images/' . $content[2]);
-                $data    = $title . '||' . $description . '||' . $content[2];
-                $filename    = './files/' . $id . '.txt';
-                if (file_put_contents($filename, $data)) {
-                    $title            = '';
-                    $description    = '';
-                    $fileUpload         = $content[2];
-                    $flag            = true;
-                }
+        $errorFileUpload = '';
+        $flagImageChange = false;
+        if ($fileUpload['name'] != null) {
+            $flagImageChange = true;
+            $configs    = parse_ini_file('config.ini');
+            $flagExtension       = checkExtension($fileUpload['name'], explode('|', $configs['extension']));
+            $flagSize            = checkSize($fileUpload['size'], $configs['min_size'], $configs['max_size']);
+            if (!$flagExtension)   $errorFileUpload .=  '<p class="error">Phần mở rộng file không hợp lệ! Phần mở rộng phải có đuôi jpg|png</p>';
+            if (!$flagSize)        $errorFileUpload .=  '<p class="error">Hoặc dung lượng file không phù hợp</p>';
+        }
+
+        if ($errorTitle == '' && $errorDescription == '' &&  $errorFileUpload == '') {
+            $data    = $title . '||' . $description . '||';
+            if ($flagImageChange) {
+                $fileNameImg         = randomStringImg($fileUpload['name'], 7);
+                $data .=  $fileNameImg;
+            } else {
+                $data .= $imageOriginal;
             }
-        }else if($errorTitle == '' && $errorDescription == '' &&  $fileUpload['name'] == null){
-            $data    = $title . '||' . $description . '||' . $content[2];
             $filename    = './files/' . $id . '.txt';
             if (file_put_contents($filename, $data)) {
+                if ($flagImageChange) {
+                    @unlink($linkImg);
+                    @move_uploaded_file($fileUpload['tmp_name'],   './images/' . $fileNameImg);
+                }
                 $title            = '';
-                $fileUpload         = $content[2];  
                 $description    = '';
                 $flag            = true;
+                header('location:index.php');
             }
         }
     }
+
     ?>
     <div id="wrapper">
         <div class="title">PHP FILE - ADD</div>
@@ -98,7 +102,7 @@
 
                 <div class="row">
                     <p>Image</p>
-                    <img src="./images/<?= $fileUpload ?>" alt="">
+                    <img src="./images/<?= $imageOriginal; ?>" alt="">
                 </div>
 
                 <div class="row">
@@ -111,12 +115,6 @@
                     <input type="submit" value="Save" name="submit">
                     <input type="button" value="Cancel" name="cancel" id="cancel-button">
                 </div>
-
-                <?php
-                if ($flag == true){
-                    header('location:index.php');
-                };
-                ?>
 
             </form>
         </div>

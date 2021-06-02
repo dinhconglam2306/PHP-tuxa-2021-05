@@ -22,20 +22,20 @@
 
 <body>
     <?php
+    require_once 'define.php';
     $id         = $_GET['id'];
-    $content    = file_get_contents("./files/$id.txt");
+    $content    = file_get_contents(DIR_FILES.$id.".txt");
     $content    = explode('||', $content);
 
     $title                = $content[0];
     $description          = $content[1];
-    $fileUpload           = $content[2];
-    $image                = "./images/$content[2]";
+    $imageOniginal        = $content[2];
 
     $flag = false;
-    if (isset($_POST['id']) && file_exists($image)) {
+    if (isset($_POST['id']) && file_exists(DIR_IMAGES.$imageOniginal)) {
         $id    = $_POST['id'];
         @unlink("./files/$id.txt");
-        @unlink($image);
+        @unlink(DIR_IMAGES.$imageOniginal);
         $flag = true;
     }
     ?>
@@ -59,7 +59,7 @@
 
                     <div class="row">
                         <p>Image</p>
-                        <img src="./images/<?php echo $fileUpload ?>" alt="" />
+                        <img src="<?php echo DIR_IMAGES.$imageOniginal ?>" alt="" />
                     </div>
                     <div class="row">
                         <input type="hidden" name="id" value="<?php echo $id; ?>">
