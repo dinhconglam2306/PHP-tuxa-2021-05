@@ -1,0 +1,22 @@
+{
+    "john":{
+        "username":"john",
+        "password":"e10adc3949ba59abbe56e057f20f883e",
+        "fullname":"John Smith"
+    },
+    "peter":{
+        "username":"peter",
+        "password":"e10adc3949ba59abbe56e057f20f883e",
+        "fullname":"Peter Brown"
+    },
+    "mary":{
+        "username":"mary",
+        "password":"e10adc3949ba59abbe56e057f20f883e",
+        "fullname":"Mary Claure"
+    },
+    "admin":{
+        "username":"admin",
+        "password":"e10adc3949ba59abbe56e057f20f883e",
+        "fullname":"Admin"
+    }
+}
