@@ -20,15 +20,15 @@
 	}
 	
 	// Tao ra ten file
-	function randomString($length = 5){
+	// function randomString($length = 5){
 		
-		$arrCharacter = array_merge(range('A','Z'), range('a','z'), range(0,9));
-		$arrCharacter = implode($arrCharacter, '');
-		$arrCharacter = str_shuffle($arrCharacter);
+	// 	$arrCharacter = array_merge(range('A','Z'), range('a','z'), range(0,9));
+	// 	$arrCharacter = implode($arrCharacter, '');
+	// 	$arrCharacter = str_shuffle($arrCharacter);
 		
-		$result		= substr($arrCharacter, 0, $length);
-		return $result;
-	}
+	// 	$result		= substr($arrCharacter, 0, $length);
+	// 	return $result;
+	// }
 	
 	// Size
 	function convertSize($size, $totalDigit = 2, $ditance = ' '){
