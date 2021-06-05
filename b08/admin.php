@@ -13,37 +13,47 @@
 		<div id="form">
 			<?php
 			require_once 'functions.php';
+			require_once 'define.php';
 			session_start();
 
 			// Lấy dự liệu time out từ xml
-			$xml = simplexml_load_file('./data/timeout.xml');
+			$xml = simplexml_load_file(DIR_DATA.'timeout.xml');
 			$time = $xml->timeout;
 			if (isset($_POST['timeout'])) {
 				$timeout = $_POST['timeout'];
 				$xml->timeout = $timeout;
-				file_put_contents('./data/timeout.xml', $xml->asXML());
+				file_put_contents(DIR_DATA.'.timeout.xml', $xml->asXML());
 			}
 
 			//Check time out
 			if ($_SESSION['flagPermission'] == true) {
 				if ($_SESSION['timeout'] + $time > time()) {
 					if ($_SESSION['role'] != 'admin') {
-					header('location:members.php');
+						redirect('members.php');
 					} else {
-						echo '<h3>Xin chào: ' . $_SESSION['fullName'] . '</h3>';
-						echo '<form method="POST" action="">
-								<h5>Time Out hiện tại : ' . $time . 's</h5>
-								 Set Time Out <input type="text" name="timeout" />
-								 <input name="submit" type="submit" value ="Save"/>
-								  </form>
-								<a href="logout.php">Đăng xuất</a>';
+			?>
+						<form action="" method="post" name="add-form">
+							<h3>Xin chào: <?= $_SESSION['fullName'] ?> </h3>
+							<div class="row">
+								<h5>Time Out hiện tại : <?= $time ?>s</h5>
+							</div>
+							<div class="row">
+								Set Time Out <input type="text" name="timeout" value="<?= $time?>"/>
+								<input  name="submit" type="submit" value="Save" />
+							</div>
+						</form>
+						<a href="logout.php">Đăng xuất</a>'
+					<?php
 					}
+					?>
+			<?php
+
 				} else {
 					session_unset();
-					header('location: login.php');
+					redirect('login.php');
 				}
 			} else {
-				header('location: login.php');
+				redirect('login.php');
 			}
 			?>
 		</div>

@@ -13,22 +13,24 @@
 		<div class="title">LOGIN</div>
 		<div id="form">
 			<?php
+			require_once 'define.php';
+			require_once 'functions.php';
 			session_start();
 
 			//Lấy dữ liệu từ xml
-			$xml = simplexml_load_file('./data/timeout.xml');
+			$xml = simplexml_load_file(DIR_DATA.'timeout.xml');
 			$time = $xml->timeout;
 
 			if ($_SESSION['flagPermission'] == true) {
 				if ($_SESSION['timeout'] + $time > time()) {
 					if ($_SESSION['role'] == 'member') {
-						header('location:members.php');
+						redirect('members.php');
 					}else 	if ($_SESSION['role'] == 'admin') {
-						header('location:admin.php');
+						redirect('admin.php');
 					}
 				} else {
 					session_unset();
-					header('location: login.php');
+					redirect('login.php');
 				}
 			} else {
 			?>

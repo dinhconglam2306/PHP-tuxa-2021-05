@@ -13,50 +13,51 @@
 		<div id="form">
 			<?php
 			require_once 'functions.php';
+			require_once 'define.php';
 			session_start();
 
 			//Time out
-			$xml = simplexml_load_file('./data/timeout.xml');
+			$xml = simplexml_load_file(DIR_DATA.'timeout.xml');
 			$time = $xml->timeout;
-
-			// Lấy dự liệu từ file json
-			$data = file_get_contents("./data/users.json");
-			$data = json_decode($data);
-			foreach ($data as $key => $value) {
-				$stdArray[$key] = (array) $value;
-			}
 
 			//check Time Out
 			if ($_SESSION['flagPermission'] == true) {
 				if ($_SESSION['timeout'] + $time > time()) {
 					if ($_SESSION['role'] == 'member') {
-						header('location:members.php');
+						redirect('members.php');
 					} else 	if ($_SESSION['role'] == 'admin') {
-						header('location:admin.php');
+						redirect('admin.php');
 					}
 				} else {
 					session_unset();
-					header('location: login.php');
+					redirect('login.php');
 				}
 			} else {
 				if (!checkEmpty($_POST['username']) && !checkEmpty($_POST['password'])) {
 					$username 	= $_POST['username'];
 					$password 	= md5($_POST['password']);
-					foreach ($stdArray as $valueArr) {
+					// Lấy dự liệu từ file json
+					$data = file_get_contents(DIR_DATA.'users.json');
+					$data = json_decode($data, true);
+
+					$userInfo = [];
+					foreach ($data as $valueArr) {
 						if ($valueArr['username'] == $username && $valueArr['password'] == $password) {
-							$_SESSION['fullName'] 		= $valueArr['fullname'];
-							$_SESSION['role'] 		= $valueArr['role'];
-							$_SESSION['flagPermission'] = true;
-							$_SESSION['timeout'] 		= time();
-							if ($valueArr['role'] == 'member') header('location:members.php');
-							if ($valueArr['role'] == 'admin') header('location:admin.php');
-							break;
-						} else {
-							header('location: login.php');
+							$userInfo = $valueArr;
 						}
 					}
+					if ($userInfo['username'] == $username && $userInfo['password'] == $password) {
+						$_SESSION['fullName'] 		= $userInfo['fullname'];
+						$_SESSION['role'] 		= $userInfo['role'];
+						$_SESSION['flagPermission'] = true;
+						$_SESSION['timeout'] 		= time();
+						if ($userInfo['role'] == 'member') redirect('members.php');
+						if ($userInfo['role'] == 'admin')  redirect('admin.php');
+					} else {
+						redirect('login.php');
+					}
 				} else {
-					header('location: login.php');
+					redirect('login.php');
 				}
 			}
 			?>

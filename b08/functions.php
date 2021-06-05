@@ -1,5 +1,13 @@
 <?php
 
+	// Chuyển hướng
+	function redirect($link)
+	{
+		header("location:$link");
+		exit();
+	}
+
+	
 	// Kiem tra du lieu khac rong
 	function checkEmpty($value){
 		$flag = false;
@@ -47,4 +55,3 @@
 		$result = round($size, $totalDigit) . $ditance . $unit;
 		return $result;
 	}
-?>

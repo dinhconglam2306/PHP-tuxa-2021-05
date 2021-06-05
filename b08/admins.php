@@ -9,32 +9,35 @@
 
 <body>
 	<div id="wrapper">
-		<div class="title">MEMBER</div>
+		<div class="title">ADMIN</div>
 		<div id="form">
 			<?php
 			require_once 'functions.php';
-			require_once 'define.php';
 			session_start();
 
-			//Lấy dự liệu time out từ xml
-			$xml = simplexml_load_file(DIR_DATA.'timeout.xml');
+			// Lấy dự liệu time out từ xml
+			$xml = simplexml_load_file('./data/timeout.xml');
 			$time = $xml->timeout;
 			if (isset($_POST['timeout'])) {
 				$timeout = $_POST['timeout'];
 				$xml->timeout = $timeout;
-				file_put_contents(DIR_DATA.'timeout.xml', $xml->asXML());
+				file_put_contents('./data/timeout.xml', $xml->asXML());
 			}
 
 			//Check time out
 			if ($_SESSION['flagPermission'] == true) {
 				if ($_SESSION['timeout'] + $time > time()) {
-					if ($_SESSION['role'] == 'admin') {
-						redirect('admin.php');
-					}else{
+					if ($_SESSION['role'] != 'admin') {
+					header('location:members.php');
+					} else {
 						echo '<h3>Xin chào: ' . $_SESSION['fullName'] . '</h3>';
-						echo '<a href="logout.php">Đăng xuất</a>';
+						echo '<form method="POST" action="">
+								<h5>Time Out hiện tại : ' . $time . 's</h5>
+								 Set Time Out <input type="text" name="timeout" />
+								 <input name="submit" type="submit" value ="Save"/>
+								  </form>
+								<a href="logout.php">Đăng xuất</a>';
 					}
-					
 				} else {
 					session_unset();
 					redirect('login.php');
