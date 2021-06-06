@@ -10,29 +10,29 @@ require 'PHPMailer/src/SMTP.php';
 class Mail
 {
     private $mail;
-    function __construct($arr)
+    function sendMail($sender,$receiver)
     {
-        $this->mail = new PHPMailer(true);
-        $this->mail->isSMTP();
-        $this->mail->Host = 'smtp.gmail.com';
-        $this->mail->SMTPAuth = true;
-        $this->mail->Username = $arr['usermail'];
-        $this->mail->Password = $arr['password'];
-        $this->mail->Port = 587;
-        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $this->mail->CharSet = ('utf-8');
-        $this->mail->setFrom('enet.dinhcong.lam@gmail.com', 'Đinh Công Lâm');
-    }
-
-    function sendMail($data){
         try {
-            $this->mail->addAddress($data['email']);
+            //Setting
+            $this->mail = new PHPMailer(true);
+            $this->mail->isSMTP();
+            $this->mail->Host = 'smtp.gmail.com';
+            $this->mail->SMTPAuth = true;
+            $this->mail->Username = $sender['email'];
+            $this->mail->Password = $sender['password'];
+            $this->mail->Port = 587;
+            $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $this->mail->CharSet = ('utf-8');
+
+            //Thiết lập địa chỉ gửi
+            $this->mail->setFrom($sender['email'], $sender['name']);
+            $this->mail->addAddress($receiver['email']);
             $this->mail->addBCC('dclam2306@gmail.com');
             $this->mail->Subject = 'ZendVn xác nhận thông tin liên hệ';
             $this->mail->isHTML(true);
             $xhtml = '';
             $xhtml .= '<ul style="list-style:inside;">ZendVn xác nhận thông tin liên hệ của bạn gồm :';
-            foreach ($data as $key => $value) {
+            foreach ($receiver as $key => $value) {
                 $xhtml .= '<li><b>' . ucfirst($key) . ':</b> ' . $value . ' </li>';
             }
             $xhtml .=  '</ul>';

@@ -8,7 +8,6 @@ $message = '';
 if (!empty($_POST)) {
     $source = $_POST;
     require_once 'libs/Validate.class.php';
-
     $validate = new Validate($source);
 
     //Rule
@@ -22,9 +21,9 @@ if (!empty($_POST)) {
     $result = $validate->getResult();
     if (empty($errors)) {
         $adminInfo = $validate->getFileJson('./data/configEmail.json');
-        $mail = new Mail($adminInfo);
-        $mail->sendMail($result);
-        if ($mail->sendMail($result)) {
+        $mail = new Mail();
+        $mail->sendMail($adminInfo,$result);
+        if ($mail->sendMail($adminInfo,$result)) {
             $message = '<p>Bạn đã gửi thành công</p>';
         } else {
             $message = '<p>Bạn đã gửi không thành công</p>';
