@@ -44,7 +44,7 @@ function getContent($link='https://vnexpress.net/rss/the-thao.rss'){
     
     return $xhtml;
 }
-
+use function PHPSTORM_META\type;
 
 function getContentGold($link='https://www.sjc.com.vn/xml/tygiavang.xml'){
     $arrContextOptions=array(
@@ -56,22 +56,21 @@ function getContentGold($link='https://www.sjc.com.vn/xml/tygiavang.xml'){
     $data = file_get_contents($link, false, stream_context_create($arrContextOptions));
     $xml = new SimpleXMLElement($data);
     $xml = $xml->ratelist->city->item;
-    $xhtml='<tbody>';
+    $xhtml='';
     for($i = 0; $i <= count($xml);$i++){
          $type      = $xml[$i]['type'];
          $buy       = $xml[$i]['buy'];
          $sell      = $xml[$i]['sell'];
-         $xhtml     .=sprintf(
-                    '<tr>
-                        <td>%s</td>
-                        <td>%s</td>
-                        <td>%s</td>
-                    </tr>',$type,$buy, $sell);
+         $xhtml     .=  '<tr>
+                            <td>'. $type.'</td>
+                            <td>'. $buy.'</td>
+                            <td>'. $sell.'</td>
+                        </tr>';
     }
-    $xhtml .= '</tbody>';
     return $xhtml;
 }
 function getContentCoin(){
+    
     $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
     $parameters = [
         'start' => '1',
@@ -97,19 +96,19 @@ function getContentCoin(){
 
     $response = curl_exec($curl); // Send the request, save the response
     $response = json_decode(($response), true);
-    $xhtml='<tbody>';
+    $xhtml='';
     foreach ($response['data'] as $key => $value) {
+        $class = "text-success";
         $name = $response['data'][$key]['name'];
         $price = number_format($response['data'][$key]['quote']['USD']['price'],2);
-        $change24h =  number_format($response['data'][$key]['quote']['USD']['percent_change_24h'],2);
-
+        $change24h =  (float)(number_format($response['data'][$key]['quote']['USD']['percent_change_24h'],2));
+        if($change24h < 0)  $class = "text-danger";
         $xhtml .='<tr>
                     <td>'.$name.'</td>
                     <td>'.$price.'</td>
-                    <td><span class="text-success">'.$change24h.'%</span></td>
+                    <td><span class="'.$class.'">'.$change24h.'%</span></td>
                 </tr>';
     }
-    $xhtml .= '</tbody>';
     curl_close($curl); // Close request
     return $xhtml;
 }
