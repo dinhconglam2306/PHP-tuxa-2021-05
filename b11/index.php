@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
-<?php require_once 'html-index/head.php';
+<?php
+
+use function PHPSTORM_META\type;
+
+require_once 'html-index/head.php';
 error_reporting(E_ALL & ~E_NOTICE);
 ?>
+
 <body class="stretched overlay-menu">
-<?php 
+    <?php
     require_once 'lib/functions.php';
     $xhtml      = getContent('https://vnexpress.net/rss/the-thao.rss');
     $xhtmlGold  = getContentGold('https://www.sjc.com.vn/xml/tygiavang.xml');
-    $xhtmlCoin  = getContentCoin('https://coinmarketcap.com/vi/');
-?>
+    $xhtmlCoin  = getContentCoin();
+
+
+
+   
+    ?>
     <div id="wrapper" class="clearfix bg-light">
         <?php require_once 'html-index/header.php'; ?>
         <div class="container-fluid">
@@ -24,7 +33,7 @@ error_reporting(E_ALL & ~E_NOTICE);
                             </div>
                             <!-- Posts -->
                             <div class="row grid-container infinity-wrapper clearfix align-align-items-start">
-                                <?= $xhtml; ?>                                
+                                <?= $xhtml; ?>
                             </div>
                         </div>
                     </div>
@@ -45,7 +54,7 @@ error_reporting(E_ALL & ~E_NOTICE);
                                                     <th><b>Bán ra</b></th>
                                                 </tr>
                                             </thead>
-                                            <?=$xhtmlGold;?>
+                                            <?= $xhtmlGold; ?>
                                         </table>
                                         <!-- <div class="text-center">
                                             <div class="spinner-border" style="width: 3rem; height: 3rem;"

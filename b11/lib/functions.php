@@ -71,31 +71,45 @@ function getContentGold($link='https://www.sjc.com.vn/xml/tygiavang.xml'){
     $xhtml .= '</tbody>';
     return $xhtml;
 }
-function getContentCoin($link='https://coinmarketcap.com/vi/'){
-    $xhtmlCoin  = file_get_contents($link);
-    $doc        = new DOMDocument();
-    @$doc->loadHTML($xhtmlCoin);
-    $xpath      = new DOMXPath($doc);
+function getContentCoin(){
+    $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
+    $parameters = [
+        'start' => '1',
+        'limit' => '10',
+        'convert' => 'USD'
+    ];
 
-    $nameCoin   = $xpath->query('.//div[@class="sc-16r8icm-0 sc-1teo54s-1 cPNAgw"]/p');
-    $priceCoin  =$xpath->query('.//div[@class="price___3rj7O "]/a');
-    $changeCoin =$xpath->query('.//span[@class="sc-15yy2pl-0 hzgCfk"]');
-    $result     =[];
+    $headers = [
+        'Accepts: application/json',
+        'X-CMC_PRO_API_KEY: d02c90bc-96bb-4aa6-8b9e-5374aa1ab93c'
+    ];
+    $qs = http_build_query($parameters); // query string encode the parameters
+    $request = "{$url}?{$qs}"; // create the request URL
 
-    for($i=0; $i <=9; $i++ ){
-        $result[$i]['name']         = trim($nameCoin->item($i)->nodeValue);
-        $result[$i]['price']        = trim($priceCoin->item($i)->nodeValue);
-        $result[$i]['change']       = trim($changeCoin->item($i)->nodeValue);
-    }
+
+    $curl = curl_init(); // Get cURL resource
+    // Set cURL options
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $request,            // set the request URL
+        CURLOPT_HTTPHEADER => $headers,     // set the headers 
+        CURLOPT_RETURNTRANSFER => 1         // ask for raw response instead of bool
+    ));
+
+    $response = curl_exec($curl); // Send the request, save the response
+    $response = json_decode(($response), true);
     $xhtml='<tbody>';
-    foreach($result as $value){
-        $xhtml .=sprintf(
-                    '<tr>
-                        <td>%s</td>
-                        <td>%s</td>
-                        <td><span class="text-success">%s</span></td>
-                    </tr>',$value['name'],$value['price'],$value['change']);
+    foreach ($response['data'] as $key => $value) {
+        $name = $response['data'][$key]['name'];
+        $price = number_format($response['data'][$key]['quote']['USD']['price'],2);
+        $change24h =  number_format($response['data'][$key]['quote']['USD']['percent_change_24h'],2);
+
+        $xhtml .='<tr>
+                    <td>'.$name.'</td>
+                    <td>'.$price.'</td>
+                    <td><span class="text-success">'.$change24h.'%</span></td>
+                </tr>';
     }
     $xhtml .= '</tbody>';
+    curl_close($curl); // Close request
     return $xhtml;
 }
