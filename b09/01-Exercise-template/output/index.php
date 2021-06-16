@@ -1,6 +1,8 @@
 <?php
 require_once 'libs/Validate.class.php';
 require_once 'libs/Mail.php';
+require_once 'libs/Form.php';
+
 error_reporting(E_ALL & ~E_NOTICE);
 $errors = '';
 $result = [];
@@ -21,15 +23,48 @@ if (!empty($_POST)) {
     $result = $validate->getResult();
     if (empty($errors)) {
         $adminInfo = $validate->getFileJson('./data/configEmail.json');
-        $mail = new Mail();
-        $mail->sendMail($adminInfo,$result);
-        if ($mail->sendMail($adminInfo,$result)) {
-            $message = '<p>Bạn đã gửi thành công</p>';
+        $mail = new Mail($adminInfo);
+        $check = $mail->sendMail($adminInfo, $result);
+        if ($check) {
+            $message = '<p style="color:blue;">Bạn đã gửi thành công</p>';
         } else {
-            $message = '<p>Bạn đã gửi không thành công</p>';
+            $message = '<p style="color:red;">Bạn đã gửi không thành công</p>';
         }
     }
 }
+//Name
+$labelName = Form::label('name','Họ và Tên',true);
+$InputName = Form::input('text','name','name',$result['name']);
+$rowName = Form::groupFormCol12($labelName,$InputName);
+
+//Mail
+$labelEmail = Form::label('email','Email',true);
+$InputEmail = Form::input('email','email','email',$result['email']);
+$rowEmail = Form::groupFormCol12($labelEmail,$InputEmail);
+
+//Title
+$labelTitle = Form::label('title','Tiêu đề',true);
+$InputTitle = Form::input('text','title','title',$result['title']);
+$rowTitle = Form::groupFormCol12($labelTitle,$InputTitle);
+
+//Textarea
+$labelTextarea = Form::label('message','Nội dung',true);
+$InputTextarea = Form::textarea('message','message',$result['message']);
+$rowTextarea = Form::groupFormCol12($labelTextarea,$InputTextarea);
+
+//Button
+$button = Form::button('submit','Gửi tin
+nhắn');
+$rowButton = Form::groupFormCol12($button,false);
+
+//col-sm-6 col-lg-4
+//Địa chỉ
+$address = Form::groupFormColSm6ColLg4('icon-map-marker2','Địa chỉ','Tầng 5, Tòa nhà Songdo, 62A Phạm Ngọc Thạch,
+Phường 6, Quận 3, HCM');
+//Hotline
+$hotline = Form::groupFormColSm6ColLg4('icon-phone3','Hotline','090 5744 470 <br /> 0383 308 983');
+//Email
+$email = Form::groupFormColSm6ColLg4('icon-email','Email','training@zend.vn');
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
@@ -40,13 +75,10 @@ if (!empty($_POST)) {
 
 <body class="stretched">
     <div id="wrapper" class="clearfix">
-
         <!-- PAGE HEADER -->
         <?php require_once 'html/header.php'; ?>
-
         <!-- PAGE TITLE -->
         <?php require_once 'html/page-title.php'; ?>
-
         <!-- Content
 		============================================= -->
         <section id="content">
@@ -66,28 +98,12 @@ if (!empty($_POST)) {
                                     echo $message;
                                     ?>
                                     <div class="row">
-                                        <div class="col-12 form-group">
-                                            <label for="name">Họ tên <small>*</small></label>
-                                            <input type="text" id="name" name="name" value="<?php echo $result['name']; ?>" class="sm-form-control" />
-                                        </div>
-                                        <div class="col-12 form-group">
-                                            <label for="email">Email <small>*</small></label>
-                                            <input type="email" id="email" name="email" value="<?php echo $result['email']; ?>" class="email sm-form-control" />
-                                        </div>
-                                        <div class="col-12 form-group">
-                                            <label for="title">Tiêu đề <small>*</small></label>
-                                            <input type="text" id="title" name="title" value="<?php echo $result['title']; ?>" class="sm-form-control" />
-                                        </div>
-                                        <div class="col-12 form-group">
-                                            <label for="message">Nội dung <small>*</small></label>
-                                            <textarea class="sm-form-control" id="message" name="message" rows="6" cols="30"><?php echo $result['message']; ?></textarea>
-                                        </div>
-                                        <div class="col-12 form-group">
-                                            <button type="submit" tabindex="5" class="button button-3d m-0">Gửi tin
-                                                nhắn</button>
-                                        </div>
+                                        <?= $rowName?>
+                                        <?= $rowEmail?>
+                                        <?= $rowTitle?>
+                                        <?= $rowTextarea?>
+                                        <?= $rowButton?>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
@@ -101,39 +117,9 @@ if (!empty($_POST)) {
 
                     <!-- Contact Info -->
                     <div class="row col-mb-50">
-                        <div class="col-sm-6 col-lg-4">
-                            <div class="feature-box fbox-center fbox-bg fbox-plain">
-                                <div class="fbox-icon">
-                                    <a href="#"><i class="icon-map-marker2"></i></a>
-                                </div>
-                                <div class="fbox-content">
-                                    <h3>Địa chỉ<span class="subtitle">Tầng 5, Tòa nhà Songdo, 62A Phạm Ngọc Thạch,
-                                            Phường 6, Quận 3, HCM</span></h3>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-lg-4">
-                            <div class="feature-box fbox-center fbox-bg fbox-plain">
-                                <div class="fbox-icon">
-                                    <a href="#"><i class="icon-phone3"></i></a>
-                                </div>
-                                <div class="fbox-content">
-                                    <h3>Hotline<span class="subtitle">090 5744 470 <br /> 0383 308 983</span></h3>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-lg-4">
-                            <div class="feature-box fbox-center fbox-bg fbox-plain">
-                                <div class="fbox-icon">
-                                    <a href="#"><i class="icon-email"></i></a>
-                                </div>
-                                <div class="fbox-content">
-                                    <h3>Email<span class="subtitle">training@zend.vn</span></h3>
-                                </div>
-                            </div>
-                        </div>
+                        <?= $address; ?>
+                        <?= $hotline; ?>
+                        <?= $email; ?>
                     </div>
                     <!-- Contact Info End -->
 
