@@ -2,13 +2,13 @@
 <html dir="ltr" lang="en-US">
 
 <head>
-    <?php require_once 'html-index/head.php'; ?>
+    <?php require_once 'html/head.php'; ?>
 </head>
 
 <body class="stretched overlay-menu">
     <div id="wrapper" class="clearfix bg-light">
         <header id="header" class="full-header dark">
-            <?php require_once 'html-index/header.php'; ?>
+            <?php require_once 'html/header.php'; ?>
         </header>
         <div class="container-fluid">
             <div class="row">
@@ -64,13 +64,13 @@
         </div>
 
         <footer>
-            <?php require_once 'html-index/footer.php'; ?>
+            <?php require_once 'html/footer.php'; ?>
         </footer>
     </div>
     <!-- Go To Top
 	============================================= -->
     <div id="gotoTop" class="icon-angle-up rounded-circle"></div>
-    <?php require_once 'html-index/script.php'; ?>
+    <?php require_once 'html/script.php'; ?>
 </body>
 
 </html>

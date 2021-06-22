@@ -1,5 +1,10 @@
 <?php
-$link = 'https://vnexpress.net/rss/the-thao.rss';
+require_once 'admin/libs/Database.class.php';
+require_once 'admin/connect.php';
+
+$query = "SELECT `link` FROM `rss` WHERE `status` = '1'";
+$url = $database->listRecord($query);
+$link = $url[0]['link'];
 $data = file_get_contents($link);
 $xml = new SimpleXMLElement($data);
 

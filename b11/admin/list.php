@@ -4,7 +4,7 @@ require_once 'libs/Helper.class.php';
 require_once 'libs/Pagination.class.php';
 $totalItems = $database->totalItem("SELECT COUNT(`id`) AS totalItems FROM `rss`");
 $pageRange =3;
-$totalItemsPerpage = 3;
+$totalItemsPerpage =3;
 $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 1;
 $pagination = new Pagination($totalItems,$totalItemsPerpage,$pageRange,$currentPage);
 
@@ -55,9 +55,6 @@ foreach ($list as $item) {
 
 <head>
     <?php require_once 'html/head.php'; ?>
-    <style>
-   
-    </style>
 </head>
 
 <body style="background-color: #eee;">
@@ -101,7 +98,7 @@ foreach ($list as $item) {
                         <?= $xhtml; ?>
                     </tbody>
                 </table>
-                <div id="pagination">
+                <div id="pagination" class ='paginator'>
                     <?= $paginationHTML ?>
                 </div>
             </div>
