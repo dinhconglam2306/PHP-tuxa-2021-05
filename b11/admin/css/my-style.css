@@ -2,3 +2,10 @@
     padding: 0;
     background-color: gold;
 }
+
+#pagination{
+    width: 100%;
+    background-color: black;
+    padding: 5px 10px;
+    color: red;
+}

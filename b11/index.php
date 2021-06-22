@@ -1,6 +1,3 @@
-<?php require_once 'lib/functions.php';
-$xhtml =  getContent('https://vnexpress.net/rss/the-thao.rss');
-?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
 
@@ -25,7 +22,7 @@ $xhtml =  getContent('https://vnexpress.net/rss/the-thao.rss');
                             </div>
                             <!-- Posts -->
                             <div class="row grid-container infinity-wrapper clearfix align-align-items-start">
-                                <?= $xhtml; ?>
+                                <?php require_once 'news.php';?>
                             </div>
                         </div>
 
@@ -39,24 +36,24 @@ $xhtml =  getContent('https://vnexpress.net/rss/the-thao.rss');
                                 <div class="box mt-4">
                                     <h3 class="mb-1">Giá vàng</h3>
                                     <div class="card card-body" id="box-gold">
-                                        <?php require_once 'table-gold.php'; ?>
-                                        <!-- <div class="text-center">
+                                        <!-- <?php require_once 'table-gold.php'; ?> -->
+                                        <div class="text-center">
                                             <div class="spinner-border" style="width: 3rem; height: 3rem;"
                                                 role="status">
                                             </div>
-                                        </div> -->
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="box mt-4">
                                     <h3 class="mb-1">Giá coin</h3>
                                     <div class="card card-body" id="box-coin">
-                                        <?php require_once 'table-coin.php'; ?>
+                                        <!-- <?php require_once 'table-coin.php'; ?> -->
 
-                                        <!-- <div class="text-center">
+                                        <div class="text-center">
                                             <div class="spinner-border" style="width: 3rem; height: 3rem;"
                                                 role="status">
                                             </div>
-                                        </div> -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
