@@ -1,28 +1,35 @@
+<?php
+session_start();
+
+echo '<pre>';
+print_r($_SESSION);
+echo '</pre>';
+error_reporting(E_ALL & ~E_NOTICE);
+require_once 'libs/Form.class.php';
+require_once 'libs/functions.php';
+require_once 'define.php';
+require_once 'connectLogin.php';
+session_start();
+//Name
+$labelName = Form::label('username', 'Username', false);
+$InputName = Form::input('text', 'username', 'username', '');
+$rowName = Form::groupFormCol12($labelName, $InputName);
+
+//Password
+$labelPass = Form::label('password', 'Password', false);
+$InputPass = Form::input('password', 'password', 'password', '');
+$rowPass = Form::groupFormCol12($labelPass, $InputPass);
+
+$button = Form::createButton('submit', 'Đăng nhập');
+$elmA = Form::createA('index.php', 'Quay về');
+$rowColtrol = Form::groupFormCol12($button, $elmA, true);
+?>
+
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
 
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap" rel="stylesheet" type="text/css" />
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-    <link rel="stylesheet" href="css/style.css" type="text/css" />
-    <link rel="stylesheet" href="css/dark.css" type="text/css" />
-
-    <link rel="stylesheet" href="css/font-icons.css" type="text/css" />
-    <link rel="stylesheet" href="css/et-line.css" type="text/css" />
-    <link rel="stylesheet" href="css/animate.css" type="text/css" />
-    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
-
-    <!-- Modern Blog Demo Specific Stylesheet -->
-    <link rel="stylesheet" href="css/modern-blog.css" type="text/css" />
-    <link rel="stylesheet" href="css/fonts.css" type="text/css" />
-
-    <link rel="stylesheet" href="css/custom.css" type="text/css" />
-    <!-- Document Title -->
-    <title>News | ZendVN</title>
+    <?php require_once 'html/head.php'; ?>
 </head>
 
 <body class="stretched">
@@ -48,26 +55,31 @@
 
                             <div class="card mx-auto rounded-0 border-0" style="max-width: 400px; background-color: rgba(255,255,255,0.93);">
                                 <div class="card-body" style="padding: 40px;">
-                                    <form id="login-form" name="login-form" class="mb-0" action="" method="post">
-                                        <h3 class="text-center">Đăng nhập trang quản trị</h3>
-                                        <div class="row">
-                                            <div class="col-12 form-group">
-                                                <label for="username">Username:</label>
-                                                <input type="text" id="username" name="username" value="" class="form-control not-dark" required />
-                                            </div>
+                                    <?php
 
-                                            <div class="col-12 form-group">
-                                                <label for="password">Password:</label>
-                                                <input type="password" id="password" name="password" value="" class="form-control not-dark" required />
+                                    //Lấy dữ liệu từ xml
+                                    $xml = simplexml_load_file(DIR_DATA . 'timeout.xml');
+                                    $time = $xml->timeout;
+                                    if ($_SESSION['flagPermission'] == true) {
+                                        if ($_SESSION['timeout'] + $time > time()) {
+                                            redirect('admin/list.php');
+                                        } else {
+                                            session_unset();
+                                            redirect('login.php');
+                                        }
+                                    } else {
+                                    ?>
+                                        <form id="login-form" name="login-form" class="mb-0" action="process.php" method="post">
+                                            <h3 class="text-center">Đăng nhập trang quản trị</h3>
+                                            <div class="row">
+                                                <?= $rowName; ?>
+                                                <?= $rowPass; ?>
+                                                <?= $rowColtrol; ?>
                                             </div>
-
-                                            <div class="col-12 form-group">
-                                                <button type="submit" class="button button-3d button-black m-0">Đăng
-                                                    nhập</button>
-                                                <a href="index.php" class="button button-3d m-0">Quay về</a>
-                                            </div>
-                                        </div>
-                                    </form>
+                                        </form>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
 
@@ -81,9 +93,7 @@
         </section><!-- #content end -->
 
     </div><!-- #wrapper end -->
-    <script src="js/jquery.js"></script>
-    <script src="js/plugins.min.js"></script>
-    <script src="js/functions.js"></script>
+    <?php require_once 'html/script.php'; ?>
 </body>
 
 </html>

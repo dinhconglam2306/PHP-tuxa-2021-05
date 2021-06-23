@@ -1,33 +1,45 @@
 <?php
+error_reporting(E_ALL & ~E_NOTICE);
 require_once 'connect.php';
-require_once 'libs/Helper.class.php';
+require_once 'libs/Helper.php';
 require_once 'libs/Pagination.class.php';
+require_once '../libs/functions.php';
+session_start();
+//Time out
+$xml = simplexml_load_file('../data/timeout.xml');
+$time = $xml->timeout;
+
+$query =    "SELECT * FROM `rss` ";
+$search = '';
 $totalItems = $database->totalItem("SELECT COUNT(`id`) AS totalItems FROM `rss`");
-$pageRange =3;
-$totalItemsPerpage =3;
+$totalItemsPerpage = 3;
+if (isset($_GET['search'])) {
+    if($_GET['search'] != ''){
+        $search = trim($_GET['search']);
+        $query .= "WHERE `link` LIKE '%$search%'";
+        $totalItems = $database->totalItem("SELECT COUNT(`id`) AS totalItems FROM `rss` WHERE `link` LIKE '%$search%'");
+        $totalItemsPerpage = $totalItems;
+    }
+}
+
+$pageRange = 3;
+
 $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 1;
-$pagination = new Pagination($totalItems,$totalItemsPerpage,$pageRange,$currentPage);
+$pagination = new Pagination($totalItems, $totalItemsPerpage, $pageRange, $currentPage);
 
 //Pagination
 $paginationHTML = $pagination->showPagination();
 
-
-
 $position = ($currentPage - 1) * $totalItemsPerpage;
-$query =    "SELECT * FROM `rss` LIMIT $position,$totalItemsPerpage";
-$search = '';
-if (isset($_GET['search'])) {
-    $search = trim($_GET['search']);
-    $query =    "SELECT * FROM `rss` WHERE `link` LIKE '%$search%' LIMIT $position,$totalItemsPerpage";
-    // $query.= "WHERE `link` LIKE '%$search%'";
-}
+$query .= "ORDER BY `ordering`";
+$query .= "LIMIT $position,$totalItemsPerpage";
 $list = $database->listRecord($query);
 $xhtml = '';
 foreach ($list as $item) {
     $id = $item['id'];
-    $link = Hepler::highLight($search, $item['link']);
+    $link = Helper::highLight($search, $item['link']);
     $ordering = $item['ordering'];
-    $status = Hepler::checkClass($id, $item['status']);
+    $status = Helper::showStatus($id, $item['status']);
     $xhtml .= sprintf(
         ' <tr>
             <td>%s</td>
@@ -47,6 +59,7 @@ foreach ($list as $item) {
         $id
     );
 }
+
 
 ?>
 
@@ -84,23 +97,37 @@ foreach ($list as $item) {
                 <a href="form.php?action=add" class="btn btn-success m-0">Add</a>
             </div>
             <div class="card-body">
-                <table class="table table-striped btn-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Link</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Ordering</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?= $xhtml; ?>
-                    </tbody>
-                </table>
-                <div id="pagination" class ='paginator'>
-                    <?= $paginationHTML ?>
-                </div>
+                <?php
+                if ($_SESSION['flagPermission'] == true) {
+                    if ($_SESSION['timeout'] + $time > time()) {
+                ?>
+                        <table class="table table-striped btn-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Link</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Ordering</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?= $xhtml; ?>
+                            </tbody>
+                        </table>
+                        <div id="pagination" class='paginator'>
+                            <?= $paginationHTML ?>
+                        </div>
+                <?php
+                    } else {
+                        session_unset();
+                        redirect('../index.php');
+                    }
+                } else {
+                    redirect('../index.php');
+                }
+                ?>
+
             </div>
         </div>
     </div>

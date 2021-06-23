@@ -4,7 +4,7 @@ class Form
 {
     public static function input($type, $id, $name, $value)
     {
-        $xhtml = sprintf(' <input type="%s" id="%s" name="%s" value="%s" class="sm-form-control" />', $type, $id, $name, $value);
+        $xhtml = sprintf(' <input type="%s" id="%s" name="%s" value="%s" class="form-control not-dark" required />', $type, $id, $name, $value);
         return $xhtml;
     }
 
@@ -57,23 +57,23 @@ class Form
         return $xhtml;
     }
 
-public static function createButton($type, $name)
-	{
-		$xhtml = sprintf(
-			' <button type="%s" class="button button-3d button-black m-0">%s</button>',
-			$type,
-			$name
-		);
-		return $xhtml;
-	}
+    public static function createButton($type, $name)
+    {
+        $xhtml = sprintf(
+            ' <button type="%s" class="button button-3d button-black m-0">%s</button>',
+            $type,
+            $name
+        );
+        return $xhtml;
+    }
 
-	public static function createA($url, $name)
-	{
-		$xhtml = sprintf(
-			' <a href="%s" class="button button-3d m-0">Quay về</a>',
-			$url,
-			$name
-		);
-		return $xhtml;
-	}
+    public static function createA($url, $name)
+    {
+        $xhtml = sprintf(
+            ' <a href="%s" class="button button-3d m-0">Quay về</a>',
+            $url,
+            $name
+        );
+        return $xhtml;
+    }
 }

@@ -14,10 +14,13 @@ class Pagination
 		if ($pageRange % 2 == 0) $pageRange = $pageRange + 1;
 		$this->pageRange = $pageRange;
 		$this->currentPage = $currentPage;
-		$this->totalPage = ceil($totalItems / $totalItemsPerpage);
+		if($totalItems > 0){
+			$this->totalPage = ceil($totalItems / $totalItemsPerpage);
+		}
+		
 	}
 
-	public function showPagination()
+	public function showPagination($search=null)
 	{
 		$paginationHTML = '';
 		if ($this->totalPage > 1) {

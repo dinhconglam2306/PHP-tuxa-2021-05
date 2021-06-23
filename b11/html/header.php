@@ -10,7 +10,7 @@
             <!-- #logo end -->
 
             <div>
-                <a href="#" class="button button-3d">Admin Panel</a>
+                <a href="./login.php" class="button button-3d">Admin Panel</a>
             </div>
         </div>
     </div>

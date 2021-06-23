@@ -123,7 +123,7 @@ class Validate{
 	}
 	
 	public function showErrors(){
-		$xhtml = '';
+		$xhtml = '<div class="alert alert-danger" role="alert">';
 		if(!empty($this->errors)){
 			$xhtml .= '<ul class="error">';
 			foreach($this->errors as $key => $value){
@@ -131,6 +131,7 @@ class Validate{
 			}
 			$xhtml .=  '</ul>';
 		}
+		$xhtml.='</div>';
 		return $xhtml;
 	}
 	

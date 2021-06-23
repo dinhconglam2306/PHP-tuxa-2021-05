@@ -1,13 +1,15 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 require_once 'libs/Validate.class.php';
-require_once 'libs/HTML.class.php';
+require_once 'libs/Form.php';
 require_once 'connect.php';
+require_once '../libs/functions.php';
 session_start();
+
 $error = '';
 $id = $_GET['id'];
 $action = $_GET['action'];
-$titePage = '';
+$titlePage = '';
 
 
 if ($action == 'edit') {
@@ -15,17 +17,15 @@ if ($action == 'edit') {
     $query = "SELECT `link`, `status`,`ordering` FROM `rss` WHERE `id` = '" . $id . "'";
     $outputValidate = $database->singleRecord($query);
     $linkForm = 'form.php?action=edit&id=' . $id;
-    $titePage = 'EDIT RSS';
+    $titlePage = 'EDIT RSS';
     if (empty($outputValidate)) {
-        header('location:error.php');
-        exit();
+        redirect('error.php');
     }
 } else if ($action == 'add') {
     $linkForm = 'form.php?action=add';
-    $titePage = 'ADD RSS';
+    $titlePage = 'ADD RSS';
 } else {
-    header('location:error.php');
-    exit();
+    redirect('error.php');
 }
 
 if (!empty($_POST)) {
@@ -36,9 +36,8 @@ if (!empty($_POST)) {
     } else {
         $_SESSION['token'] = $_POST['token'];
     }
-
-    $source     = ['link' => $_POST['link'], 'status' => $_POST['status'], 'ordering' => $_POST['ordering']];
-    $validate   = new Validate($source);
+    unset($_POST['token']);
+    $validate   = new Validate($_POST);
     $validate->addRule('link', 'url')
         ->addRule('ordering', 'int', ["min" => 1, "max" => 10])
         ->addRule('status', 'status');
@@ -47,42 +46,37 @@ if (!empty($_POST)) {
     $outputValidate = $validate->getResult();
 
     if (!$validate->isValid()) {
-        $error      = $validate->showErrors();
-        $xhtmlError =   '<div class="alert alert-danger" role="alert">
-                           ' . $error . '
-                            </div>';
+        $xhtmlError      = $validate->showErrors();
     } else {
         if ($action == 'edit') {
             $where      = [['id', $id]];
             $database->update($outputValidate, $where);
-            $success    = '<div class="alert alert-success" role="alert">
-                            Bạn đã sửa thành công! Bấm vào <a href ="list.php" >đây</a> để quay lại trang chủ.
-                        </div>';
+            redirect('list.php');
         } else if ($action == 'add') {
             $database->insert($outputValidate);
             $outputValidate = [];
-            $success        = '<div class="alert alert-success" role="alert">
-                                 Bạn đã thêm thành công! Bấm vào <a href ="list.php" >đây</a> để quay lại trang chủ.
-                               </div>';
+            $mess           = 'Bạn đã thêm thành công! Bấm vào <a href ="list.php" >đây</a> để quay lại trang chủ.';
         }
+        $success = '<div class="alert alert-success" role="alert">' . $mess . '</div>';
     }
 }
 //link-form
-$inputLink = HTML::createInput('text','link',$outputValidate['link']);
-$labelLink = HTML::createLabel('Link');
-$groupLink = HTML::createFormGroup($labelLink,$inputLink);
+$inputLink = Form::createInput('text', 'link', $outputValidate['link']);
+$labelLink = Form::createLabel('Link', 'font-weight-bold');
+$groupLink = Form::createFormGroup($labelLink, $inputLink);
 
 //Ordering-form
-$inputOrdering = HTML::createInput('text','ordering',$outputValidate['ordering']);
-$labelOrdering = HTML::createLabel('Ordering');
-$groupOrdering = HTML::createFormGroup($labelOrdering,$inputOrdering);
+$inputOrdering = Form::createInput('text', 'ordering', $outputValidate['ordering']);
+$labelOrdering = Form::createLabel('Ordering', 'font-weight-bold');
+$groupOrdering = Form::createFormGroup($labelOrdering, $inputOrdering);
 
 //Status-form
-$arrStatus = [2 => 'Select status', 0 => 'Inactive', 1 => 'Active'];
-$status = HTML::createSelectbox($arrStatus, 'status', $outputValidate['status'], 'custom-select');
-$labelStatus = HTML::createLabel('Status');
-$groupStatus = HTML::createFormGroup($labelStatus,$status);
+$arrStatus   = ['default' => 'Select status', 'inactive' => 'Inactive', 'active' => 'Active'];
+$status      = Form::createSelectbox($arrStatus, 'status', $outputValidate['status'], 'custom-select');
+$labelStatus = Form::createLabel('Status', 'font-weight-bold');
+$groupStatus = Form::createFormGroup($labelStatus, $status);
 
+$form        = $groupLink . $groupOrdering . $groupStatus;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,25 +87,39 @@ $groupStatus = HTML::createFormGroup($labelStatus,$status);
 
 <body style="background-color: #eee;">
     <div class="container pt-5">
-        <form action="<?=$linkForm;?>" method="post">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="m-0"><?= $titePage; ?></h4>
-                </div>
-                <div class="card-body">
-                    <?= $xhtmlError; ?>
-                    <?= $success; ?>
-                    <?= $groupLink;?>
-                    <?= $groupStatus;?>
-                    <?= $groupOrdering;?>
-                </div>
-                <div class="card-footer">
-                    <input class="form-control" type="hidden" name="token" value="<?= time(); ?>">
-                    <button type="submit" class="btn btn-success">Save</button>
-                    <a href="list.php" class="btn btn-danger">Cancel</a>
-                </div>
-            </div>
-        </form>
+        <?php
+        //Time out
+        $xml = simplexml_load_file('../data/timeout.xml');
+        $time = $xml->timeout;
+        if ($_SESSION['flagPermission'] == true) {
+            if ($_SESSION['timeout'] + $time > time()) {
+        ?>
+                <form action="<?= $linkForm; ?>" method="post">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4 class="m-0"><?= $titlePage; ?></h4>
+                        </div>
+                        <div class="card-body">
+                            <?= $xhtmlError; ?>
+                            <?= $success; ?>
+                            <?= $form; ?>
+                        </div>
+                        <div class="card-footer">
+                            <input class="form-control" type="hidden" name="token" value="<?= time(); ?>">
+                            <button type="submit" class="btn btn-success">Save</button>
+                            <a href="list.php" class="btn btn-danger">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+        <?php
+            } else {
+                session_unset();
+                redirect('../index.php');
+            }
+        } else {
+            redirect('../index.php');
+        }
+        ?>
     </div>
     <?php require_once 'html/script.php'; ?>
 </body>
