@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-echo '<pre>';
-print_r($_SESSION);
-echo '</pre>';
 error_reporting(E_ALL & ~E_NOTICE);
 require_once 'libs/Form.class.php';
 require_once 'libs/functions.php';

@@ -29,7 +29,7 @@ session_start();
 					redirect('admin/list.php');
 				} else {
 					session_unset();
-					redirect('login.php');
+					redirect('index.php');
 				}
 			} else {
 				if (!checkEmpty($_POST['username']) && !checkEmpty($_POST['password'])) {
@@ -43,10 +43,10 @@ session_start();
 						$_SESSION['timeout'] 		= time();
 						redirect('admin/list.php');
 					} else {
-						redirect('login.php');
+						redirect('index.php');
 					}
 				} else {
-					redirect('login.php');
+					redirect('index.php');
 				}
 			}
 			?>

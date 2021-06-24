@@ -20,7 +20,7 @@ class Pagination
 		
 	}
 
-	public function showPagination($search=null)
+	public function showPagination()
 	{
 		$paginationHTML = '';
 		if ($this->totalPage > 1) {
