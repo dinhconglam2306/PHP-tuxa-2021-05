@@ -17,16 +17,9 @@ class Rss extends Controller
 		} else {
 			$this->view->items = $this->db->listItems();
 		}
-
 		$this->view->render('rss/index');
 	}
 
-
-	public function search()
-	{
-		// $this->view->items = $this->db->listItems($option);
-		// $this->view->render('rss/index');
-	}
 	public function changeStatus()
 	{
 		$param = $_GET;
@@ -35,44 +28,15 @@ class Rss extends Controller
 		exit();
 	}
 
-	public function add()
-	{
-		Session::init();
-		if (!empty($_POST)) {
-			if ($_SESSION['token'] == $_POST['token']) {
-				unset($_SESSION['token']);
-				header('location:index.php?controller=rss&action=index');
-				exit();
-			} else {
-				$_SESSION['token'] = $_POST['token'];
-			}
-			unset($_POST['token']);
-			$validate = new Validate($_POST);
-			$validate->addRule('link', 'url')
-				->addRule('ordering', 'int', ["min" => 1, "max" => 10])
-				->addRule('status', 'status');
-			$validate->run();
-			$this->view->output =  $validate->getResult();
-			if (!$validate->isValid()) {
-				$this->view->error      = $validate->showErrors();
-			} else {
-				$this->db->insertItem($this->view->output);
-				header('location:index.php?controller=rss&action=index');
-				exit();
-			}
-		}
-		$this->view->render('rss/add');
-	}
-
-	public function edit()
+	public function form()
 	{
 		Session::init();
 
 		//Lấy thông tin
-		$id = $_GET['id'];
-		$this->view->item = $this->db->listItem($id);
-
-
+		if (isset($_GET['id'])) {
+			$id = $_GET['id'];
+			$this->view->item = $this->db->listItem($id);
+		}
 		if (!empty($_POST)) {
 			if ($_SESSION['token'] == $_POST['token']) {
 				unset($_SESSION['token']);
@@ -81,23 +45,35 @@ class Rss extends Controller
 			} else {
 				$_SESSION['token'] = $_POST['token'];
 			}
+			if (!isset($_GET['id'])) {
+				unset($_POST['token']);
+			}
 			$validate = new Validate($_POST);
 			$validate->addRule('link', 'url')
 				->addRule('ordering', 'int', ["min" => 1, "max" => 10])
 				->addRule('status', 'status');
 			$validate->run();
-			$this->view->item =  $validate->getResult();
 			if (!$validate->isValid()) {
 				$this->view->error      = $validate->showErrors();
 			} else {
-				$where      = [['id', $id]];
-				unset($this->view->item['token']);
-				$this->db->updateItem($this->view->item, $where);
-				header('location:index.php?controller=rss&action=index');
-				exit();
+				if (isset($_GET['id'])) {
+					$this->view->item =  $validate->getResult();
+					$id = $_GET['id'];
+					unset($this->view->item['token']);
+					$where      = [['id', $id]];
+					$this->db->updateItem($this->view->item, $where);
+					header('location:index.php?controller=rss&action=index');
+					exit();
+				} else {
+					$this->view->output =  $validate->getResult();
+					echo $this->view->output;
+					$this->db->insertItem($this->view->output);
+					header('location:index.php?controller=rss&action=index');
+					exit();
+				}
 			}
 		}
-		$this->view->render('rss/edit');
+		$this->view->render('rss/form');
 	}
 
 	public function delete()

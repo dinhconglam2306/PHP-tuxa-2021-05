@@ -14,7 +14,7 @@ foreach ($this->items as $item) {
         <td>' . $status . '</td>
         <td>' . $ordering . '</td>
         <td>
-            <a href="index.php?controller=' . $controller . '&action=edit&id=' . $id . '" class="btn btn-sm btn-warning">Edit</a>
+            <a href="index.php?controller=' . $controller . '&action=form&id=' . $id . '" class="btn btn-sm btn-warning">Edit</a>
             <a href="index.php?controller=' . $controller . '&action=delete&id=' . $id . '" class="btn btn-sm btn-danger btn-delete">Delete</a>
         </td>
     </tr>';
@@ -46,7 +46,7 @@ foreach ($this->items as $item) {
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="m-0">RSS List</h4>
-        <a href="index.php?controller=rss&action=add" class="btn btn-success m-0">Add</a>
+        <a href="index.php?controller=rss&action=form" class="btn btn-success m-0">Add</a>
     </div>
     <div class="card-body">
         <table class="table table-striped btn-table">

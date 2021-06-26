@@ -4,8 +4,11 @@ $error = $this->error;
 if(!empty($error)){
     $xhtmlError = '<div class="alert alert-danger" role="alert">'.$error.'</div>';
 }
-
-$id = $_GET['id'];
+$url = 'index.php?controller=rss&action=form';
+if(isset($_GET['id'])){
+    $id = $_GET['id'];
+    $url = 'index.php?controller=rss&action=form&id='.$id.'';
+}
 
 //link-form
 $inputLink = Form::createInput('text', 'link', $this->item['link']);
@@ -28,7 +31,7 @@ $form        = $groupLink . $groupOrdering . $groupStatus;
 ?>
 
 
-<form action="index.php?controller=rss&action=edit&id=<?php echo $id;?>" method="post">
+<form action="<?=$url;?>" method="post">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="m-0"><?= $this->title; ?></h4>
