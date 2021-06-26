@@ -46,7 +46,7 @@ if (!empty($_POST)) {
 
     $validate->run();
     $outputValidate = $validate->getResult();
-   echo '<pre>';
+    echo '<pre>';
     print_r ($outputValidate);
     echo '</pre>';
 

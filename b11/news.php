@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_get('Asia/Ho_Chi_Minh');
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 error_reporting(E_ALL & ~E_NOTICE);
 require_once 'admin/libs/Database.class.php';
 require_once 'admin/connect.php';
@@ -29,11 +29,9 @@ foreach ($url as $link) {
         preg_match('/src="([^"]*)"/i', $item['description'], $tmp1);
         $pattern = '.*br>(.*)';
         preg_match('/' . $pattern . '/', $item['description'], $tmp2);
-        if ($tmp1[1] == '') {
-            $tmp1[1] = 'images/default.jpg';
-        }
-        $image = $tmp1[1];
-        $description = $tmp2[1];
+
+        $image = $tmp1[1] ??  'images/default.jpg';
+        $description = $tmp2[1] ?? $item['description'];
 
         $result[] = [
             'title'     => $item['title'],
