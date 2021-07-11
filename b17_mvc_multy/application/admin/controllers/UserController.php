@@ -23,10 +23,4 @@ class UserController extends Controller{
 		$this->_view->appendJS(array('user/js/test.js'));
 		$this->_view->render('user/logout', true);
 	}
-
-	public function listAction(){
-		$this->_view->setTitle('List');
-		$this->_view->render('user/list', true);
-	}
-	
 }

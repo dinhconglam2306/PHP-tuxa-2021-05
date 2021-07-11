@@ -35,7 +35,7 @@
 							<div class="col-md-6 col-lg-4 p-3">
 								<div class="entry mb-1 clearfix">
 									<div class="entry-image mb-3">
-										<a href="https://i1-thethao.vnecdn.net/2021/01/19/ibra-1611012987-1611012996-7334-1611013230.png?w=1200&h=0&q=100&dpr=1&fit=crop&s=Yg-XociucOw7q5BRQLTzDA" data-lightbox="image" style="background: url(images/items/1.jpg) no-repeat center center; background-size: cover; height: 278px;"></a>
+										<a href="https://i1-thethao.vnecdn.net/2021/01/19/ibra-1611012987-1611012996-7334-1611013230.png?w=1200&h=0&q=100&dpr=1&fit=crop&s=Yg-XociucOw7q5BRQLTzDA" data-lightbox="image" style="background: url('<?= $this->_dirImg ?>items/1.jpg') no-repeat center center; background-size: cover; height: 278px;"></a>
 									</div>
 									<div class="entry-title">
 										<h3><a href="https://vnexpress.net/ibrahimovic-danh-got-chuyen-bong-kieu-taekwondo-4223019.html" target="_blank">Ibrahimovic đánh gót chuyền bóng kiểu taekwondo</a>

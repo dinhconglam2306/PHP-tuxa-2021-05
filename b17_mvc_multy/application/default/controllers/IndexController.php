@@ -15,6 +15,8 @@ class IndexController extends Controller{
 	}
 	public function loginAction(){
 		$this->_view->setTitle('News | ZendVn');
+		$this->_templateObj->setFileTemplate('login.php');
+		$this->_templateObj->load();
 		$this->_view->render('user/login', true);
 	}
 	
