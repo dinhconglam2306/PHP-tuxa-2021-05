@@ -8,12 +8,10 @@ class Rss_Model extends Model
 		$this->setTable('rss');
 	}
 
-	public function listItems($options = null)
+	public function listItems($params,$options = null)
 	{
 		$query 		= "SELECT * FROM `rss`";
-		if($options!=null){
-		$query 	.= "WHERE `link` LIKE '%$options%'";
-		}
+		if(isset($params['search']) && trim($params['search']) != '') $query.= "WHERE `link` LIKE '%{$params['search']}%'";
 		$result		= $this->listRecord($query);
 		return $result;
 	}
@@ -27,22 +25,24 @@ class Rss_Model extends Model
 		return $result;
 	}
 
-	public function changeStatus($param)
+	public function changeStatus($params)
 	{
-		$id = $param['id'];
-		$status = $param['status'] == 'active' ? 'inactive' : 'active';
+		$id = $params['id'];
+		$status = $params['status'] == 'active' ? 'inactive' : 'active';
 		$query = "UPDATE `rss` SET `status` = '$status' WHERE `id` = $id";
 		$this->query($query);
 	}
 
-	public function insertItem($param)
+	public function insertItem($params)
 	{
-		$this->insert($param);
+		$this->insert($params);
 	}
 
-	public function updateItem($param,$where)
+	public function updateItem($params,$options=null)
 	{
-		$this->update($param,$where);
+		$where = [['id',$params['id']]];
+		unset($params['id']);
+		$this->update($params,$where);
 	}
 
 	public function deleteItem($id, $options = null)

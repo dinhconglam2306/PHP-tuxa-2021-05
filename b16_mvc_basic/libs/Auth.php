@@ -1,6 +1,5 @@
 <?php
-class Auth{
-	
+class Auth{	
 	public static function checkLogin(){
 		Session::init();
 		if(Session::get('loggedIn')==false){

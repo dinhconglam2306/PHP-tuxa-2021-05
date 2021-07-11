@@ -1,12 +1,18 @@
 <?php
+Session::destroy();
 $controller = $_GET['controller'];
 $xhtml = '';
-$search = isset($_GET['search'])? $_GET['search'] : '';
+$search = $_GET['search'] ?? '';
+$xhtmlSuccess='';
+if(isset($_SESSION['form'])) $xhtmlSuccess ='<div class="alert alert-success" role="alert">'.$_SESSION['form'].' thành công</div>';
 foreach ($this->items as $item) {
     $id = $item['id'];
     $link = Helper::highLight($search, $item['link']);
     $ordering = $item['ordering'];
     $status = Helper::showStatus($controller, $id, $item['status']);
+    $linkEdit = URL::createLink($controller,'form',"&id=$id");
+    $linkDelete = URL::createLink($controller,'delete',"&id=$id");
+
     $xhtml .= '
      <tr>
         <td>' . $id . '</td>
@@ -14,8 +20,8 @@ foreach ($this->items as $item) {
         <td>' . $status . '</td>
         <td>' . $ordering . '</td>
         <td>
-            <a href="index.php?controller=' . $controller . '&action=form&id=' . $id . '" class="btn btn-sm btn-warning">Edit</a>
-            <a href="index.php?controller=' . $controller . '&action=delete&id=' . $id . '" class="btn btn-sm btn-danger btn-delete">Delete</a>
+            <a href="'.$linkEdit.'" class="btn btn-sm btn-warning">Edit</a>
+            <a href="'.$linkDelete.'" class="btn btn-sm btn-danger btn-delete">Delete</a>
         </td>
     </tr>';
 }
@@ -37,7 +43,7 @@ foreach ($this->items as $item) {
                 <input type="text" class="form-control" name="search" placeholder="Enter search keyword...." value="<?= $search ?>">
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-md btn-outline-primary m-0 px-3 py-2 z-depth-0 waves-effect" type="button">Search</button>
-                    <a href="index.php?controller=rss&action=index" class="btn btn-md btn-outline-danger m-0 px-3 py-2 z-depth-0 waves-effect" type="button">Clear</a>
+                    <a href="<?= URL::createLink('rss','index'); ?>" class="btn btn-md btn-outline-danger m-0 px-3 py-2 z-depth-0 waves-effect" type="button">Clear</a>
                 </div>
             </div>
         </form>
@@ -46,7 +52,7 @@ foreach ($this->items as $item) {
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="m-0">RSS List</h4>
-        <a href="index.php?controller=rss&action=form" class="btn btn-success m-0">Add</a>
+        <a href="<?= URL::createLink('rss','form'); ?>" class="btn btn-success m-0">Add</a>
     </div>
     <div class="card-body">
         <table class="table table-striped btn-table">
@@ -60,6 +66,7 @@ foreach ($this->items as $item) {
                 </tr>
             </thead>
             <tbody>
+                <?= $xhtmlSuccess;?>
                 <?= $xhtml; ?>
             </tbody>
         </table>

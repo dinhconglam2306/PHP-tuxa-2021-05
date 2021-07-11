@@ -11,43 +11,37 @@ class Rss extends Controller
 
 	public function index()
 	{
-		if (!empty($_GET)) {
-			$option = $_GET['search'];
-			$this->view->items = $this->db->listItems($option);
-		} else {
-			$this->view->items = $this->db->listItems();
-		}
+
+		$params = $_GET;
+		$this->view->items = $this->db->listItems($params);
 		$this->view->render('rss/index');
 	}
 
 	public function changeStatus()
 	{
-		$param = $_GET;
-		$this->db->changeStatus($param);
-		header('location:index.php?controller=rss&action=index');
-		exit();
+		$params = $_GET;
+		$this->db->changeStatus($params);
+		URL::redirect(URL::createLink('rss', 'index'));
 	}
 
 	public function form()
 	{
-		Session::init();
-
 		//Lấy thông tin
+		$linkDirect = URL::createLink('rss', 'form');
 		if (isset($_GET['id'])) {
-			$id = $_GET['id'];
-			$this->view->item = $this->db->listItem($id);
+			$this->view->html = 'oke';
+			$this->view->title = 'EDIT RSS';
+			$linkDirect .= "&id={$_GET['id']}";
+			$this->view->item = $this->db->listItem($_GET['id']);
 		}
 		if (!empty($_POST)) {
 			if ($_SESSION['token'] == $_POST['token']) {
 				unset($_SESSION['token']);
-				header('location:index.php?controller=rss&action=index');
-				exit();
+				URL::redirect($linkDirect);
 			} else {
 				$_SESSION['token'] = $_POST['token'];
 			}
-			if (!isset($_GET['id'])) {
-				unset($_POST['token']);
-			}
+			unset($_POST['token']);
 			$validate = new Validate($_POST);
 			$validate->addRule('link', 'url')
 				->addRule('ordering', 'int', ["min" => 1, "max" => 10])
@@ -56,21 +50,16 @@ class Rss extends Controller
 			if (!$validate->isValid()) {
 				$this->view->error      = $validate->showErrors();
 			} else {
+				$params= $validate->getResult();
+				Session::set('form','Thêm');
 				if (isset($_GET['id'])) {
-					$this->view->item =  $validate->getResult();
-					$id = $_GET['id'];
-					unset($this->view->item['token']);
-					$where      = [['id', $id]];
-					$this->db->updateItem($this->view->item, $where);
-					header('location:index.php?controller=rss&action=index');
-					exit();
+					Session::set('form','Sửa');
+					$params['id'] = $_GET['id'];
+					$this->db->updateItem($params);
 				} else {
-					$this->view->output =  $validate->getResult();
-					echo $this->view->output;
-					$this->db->insertItem($this->view->output);
-					header('location:index.php?controller=rss&action=index');
-					exit();
+					$this->db->insertItem($params);
 				}
+				URL::redirect(URL::createLink('rss', 'index'));
 			}
 		}
 		$this->view->render('rss/form');
@@ -79,7 +68,6 @@ class Rss extends Controller
 	public function delete()
 	{
 		if (isset($_GET['id'])) $this->db->deleteItem($_GET['id']);
-		header('location:index.php?controller=rss&action=index');
-		exit();
+		URL::redirect(URL::createLink('rss', 'index'));
 	}
 }
