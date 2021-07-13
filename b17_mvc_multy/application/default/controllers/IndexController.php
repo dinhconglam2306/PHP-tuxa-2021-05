@@ -10,14 +10,10 @@ class IndexController extends Controller{
 	}
 	
 	public function indexAction(){
+
+		$this->_view->listRss  = $this->_model->listRss();
 		$this->_view->setTitle('News | ZendVn');
-		$this->_view->render('user/index', true);
-	}
-	public function loginAction(){
-		$this->_view->setTitle('News | ZendVn');
-		$this->_templateObj->setFileTemplate('login.php');
-		$this->_templateObj->load();
-		$this->_view->render('user/login', true);
+		$this->_view->render('index/index', true);
 	}
 	
 }

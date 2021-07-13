@@ -11,11 +11,13 @@
 </head>
 
 <body style="background-color: #eee;">
-    <?php
-    require_once APPLICATION_PATH . $this->_moduleName . DS . 'views' . DS . $this->_fileView . '.php';
-    ?>
+    <div class="container pt-5">
+        <?php
+        require_once APPLICATION_PATH . $this->_moduleName . DS . 'views' . DS . $this->_fileView . '.php';
+        ?>
 
-    <?php echo $this->_jsFiles; ?>
+        <?php echo $this->_jsFiles; ?>
+    </div>
 </body>
 
 </html>

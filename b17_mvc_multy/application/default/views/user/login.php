@@ -1,3 +1,39 @@
+<?php
+$mess = '';
+if ($_SESSION['flagPermission'] == true) {
+  if ($_SESSION['timeout'] + 3600 > time()) {
+    URL::redirect(URL::createLink('admin', 'rss', 'index'));
+  } else {
+    session_unset();
+    URL::redirect(URL::createLink('default', 'index', 'index'));
+  }
+} else {
+  if (!empty($_POST)) {
+    if (!empty($this->user)) {
+      $_SESSION['flagPermission'] = true;
+      $_SESSION['timeout']         = time();
+      URL::redirect(URL::createLink('admin', 'rss', 'index'));
+    } else {
+      $mess = '<div class="alert alert-danger" role="alert">Tài khoản hoặc mật khẩu không đúng.</div>';
+    }
+  }
+}
+
+//Name
+$labelName = Form::labelLogin('username', 'Username', false);
+$InputName = Form::inputLogin('text', 'username', 'username', $_POST['username']);
+$rowName = Form::groupFormCol12Login($labelName, $InputName);
+
+//Password
+$labelPass = Form::labelLogin('password', 'Password', false);
+$InputPass = Form::inputLogin('password', 'password', 'password', $_POST['password']);
+$rowPass = Form::groupFormCol12Login($labelPass, $InputPass);
+
+$button = Form::createButtonLogin('submit', 'Đăng nhập');
+$elmA = Form::createALogin('index.php', 'Quay về');
+$rowColtrol = Form::groupFormCol12Login($button, $elmA, true);
+
+?>
 <section id="content" class="w-100">
   <div class="content-wrap py-0">
 
@@ -9,32 +45,19 @@
           <div class="center">
             <h2 class="text-white">ZendVN</h2>
           </div>
-
           <div class="card mx-auto rounded-0 border-0" style="max-width: 400px; background-color: rgba(255,255,255,0.93);">
             <div class="card-body" style="padding: 40px;">
               <form id="login-form" name="login-form" class="mb-0" action="" method="post">
                 <h3 class="text-center">Đăng nhập trang quản trị</h3>
+                <?= $mess ?>
                 <div class="row">
-                  <div class="col-12 form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="" class="form-control not-dark" required />
-                  </div>
-
-                  <div class="col-12 form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" value="" class="form-control not-dark" required />
-                  </div>
-
-                  <div class="col-12 form-group">
-                    <button type="submit" class="button button-3d button-black m-0">Đăng
-                      nhập</button>
-                    <a href="index.php" class="button button-3d m-0">Quay về</a>
-                  </div>
+                  <?= $rowName; ?>
+                  <?= $rowPass; ?>
+                  <?= $rowColtrol; ?>
                 </div>
               </form>
             </div>
           </div>
-
           <div class="text-center dark mt-3"><small>Copyrights &copy; All Rights Reserved by ZendVN
               Inc.</small></div>
         </div>
