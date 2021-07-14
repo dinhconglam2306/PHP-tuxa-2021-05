@@ -11,7 +11,7 @@ class IndexController extends Controller{
 	
 	public function indexAction(){
 
-		$this->_view->listRss  = $this->_model->listRss();
+		$this->_view->items  = $this->_model->listItems();
 		$this->_view->setTitle('News | ZendVn');
 		$this->_view->render('index/index', true);
 	}

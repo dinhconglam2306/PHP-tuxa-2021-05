@@ -13,9 +13,32 @@ class UserController extends Controller
 
 	public function loginAction()
 	{
-		$params = $_POST;
-		$this->_view->user  = $this->_model->checkLogin($params);
+		$params = $this->_arrParam;
+		$user  = $this->_model->checkLogin($params);
 		$this->_view->setTitle('News | ZendVn');
+
+
+
+
+		if ($_SESSION['flagPermission'] == true) {
+			if ($_SESSION['timeout'] + 3600 > time()) {
+				URL::redirect(URL::createLink('admin', 'rss', 'index'));
+			} else {
+				session_unset();
+				URL::redirect(URL::createLink('default', 'index', 'index'));
+			}
+		} else {
+			if (!empty($_POST)) {
+				$mess = '';
+				if (!empty($user)) {
+					$_SESSION['flagPermission'] = true;
+					$_SESSION['timeout']         = time();
+					URL::redirect(URL::createLink('admin', 'rss', 'index'));
+				} else {
+					$this->_view->error = $mess = '<div class="alert alert-danger" role="alert">Tài khoản hoặc mật khẩu không đúng.</div>';
+				}
+			}
+		}
 		$this->_view->render('user/login');
 	}
 }

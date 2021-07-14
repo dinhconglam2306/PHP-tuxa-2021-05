@@ -1,5 +1,8 @@
 <?php
-$url = $this->listRss;
+echo '<pre>';
+print_r($this->arrParams);
+echo '</pre>';
+$url = $this->items;
 if (empty($url)) $url = [['link' => 'https://vnexpress.net/rss/tin-moi-nhat.rss']];
 foreach ($url as $link) {
 	$link = $link['link'];
@@ -65,89 +68,55 @@ foreach ($url as $link) {
 }
 
 ?>
-<div id="wrapper" class="clearfix bg-light">
-	<header id="header" class="full-header dark">
-		<div id="header-wrap">
+
+
+<div class="container-fluid">
+	<div class="row">
+		<!-- Content -->
+
+		<section id="content" class="bg-light">
+			<div class="content-wrap pt-lg-0 pt-xl-0 pb-0">
+				<div class="container-fluid clearfix">
+					<div class="heading-block border-bottom-0 center pt-4 mb-3">
+						<h3>Tin tức</h3>
+					</div>
+					<!-- Posts -->
+					<div class="row grid-container infinity-wrapper clearfix align-align-items-start">
+						<?= $xhtml; ?>
+					</div>
+				</div>
+
+			</div>
+		</section> <!-- #content end -->
+
+		<section class="right-side mb-4">
 			<div class="container">
-				<div class="header-row">
+				<div class="row">
+					<div class="col-12">
+						<div class="box mt-4">
+							<h3 class="mb-1">Giá vàng</h3>
+							<div class="card card-body" data-url="<?= APPLICATION_URL . "{$this->arrParams['module']}/views/{$this->arrParams['controller']}/table-gold.php" ?>" id="box-gold">
+								<!-- <?php require_once 'table-gold.php'; ?> -->
+								<div class="text-center">
+									<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="box mt-4">
+							<h3 class="mb-1">Giá coin</h3>
+							<div class="card card-body" data-url="<?= APPLICATION_URL . "{$this->arrParams['module']}/views/{$this->arrParams['controller']}/table-coin.php" ?>" id="box-coin">
 
-					<!-- Logo -->
-					<div id="logo">
-						<a href="#" class="standard-logo"><span class="p-1">ZendVN</span></a>
-						<a href="#" class="retina-logo"><span class="p-1">ZendVN</span></a>
-					</div>
-					<!-- #logo end -->
-
-					<div>
-						<a href="index.php?module=default&controller=user&action=login" class="button button-3d">Admin Panel</a>
+								<!-- <?php require_once 'table-coin.php'; ?> -->
+								<div class="text-center">
+									<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="header-wrap-clone" style="height: 62px"></div>
-	</header>
-	<div class="container-fluid">
-		<div class="row">
-			<!-- Content -->
-
-			<section id="content" class="bg-light">
-				<div class="content-wrap pt-lg-0 pt-xl-0 pb-0">
-					<div class="container-fluid clearfix">
-						<div class="heading-block border-bottom-0 center pt-4 mb-3">
-							<h3>Tin tức</h3>
-						</div>
-						<!-- Posts -->
-						<div class="row grid-container infinity-wrapper clearfix align-align-items-start">
-							<?= $xhtml; ?>
-						</div>
-					</div>
-
-				</div>
-			</section> <!-- #content end -->
-
-			<section class="right-side mb-4">
-				<div class="container">
-					<div class="row">
-						<div class="col-12">
-							<div class="box mt-4">
-								<h3 class="mb-1">Giá vàng</h3>
-								<div class="card card-body" data-url-gold="application/default/views/index/table-gold.php" id="box-gold">
-									<!-- <?php require_once 'table-gold.php'; ?> -->
-									<div class="text-center">
-										<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="box mt-4">
-								<h3 class="mb-1">Giá coin</h3>
-								<div class="card card-body" data-url-coin="application/default/views/index/table-coin.php" id="box-coin">
-
-									<!-- <?php require_once 'table-coin.php'; ?> -->
-									<div class="text-center">
-										<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-		</div>
+		</section>
 	</div>
-
-	<footer>
-		<div id="copyrights" class="bg-dark dark">
-			<div class="container clearfix">
-
-				<div class="row col-mb-30">
-					<div class="col-12 text-center text-muted">
-						Copyrights &copy; 2020 All Rights Reserved by ZendVN<br>
-					</div>
-				</div>
-
-			</div>
-		</div>
-	</footer>
 </div>

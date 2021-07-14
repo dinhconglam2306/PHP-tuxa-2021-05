@@ -7,7 +7,7 @@ class IndexModel extends Model
 		$this->setTable('rss');
 	}
 
-	public function listRss()
+	public function listItems()
 	{
 		$query = "SELECT `link` FROM `rss` WHERE `status` = 'active' ORDER BY `ordering`";
 		$url = $this->listRecord($query);

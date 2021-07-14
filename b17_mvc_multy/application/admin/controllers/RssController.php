@@ -12,7 +12,6 @@ class RssController extends Controller
 
 	public function indexAction()
 	{
-		$params = $_GET;
 		$this->_view->items = $this->_model->listItems($this->_arrParam);
 		$this->_view->setTitle('List | ZendVn');
 		$this->_view->render('rss/index');
@@ -20,8 +19,7 @@ class RssController extends Controller
 
 	public function changestatusAction()
 	{
-		$params = $_GET;
-		$this->_model->changeStatus($params);
+		$this->_model->changeStatus($this->_arrParam);
 		URL::redirect(URL::createLink('admin', 'rss', 'index'));
 	}
 
@@ -34,23 +32,23 @@ class RssController extends Controller
 
 
 
-		if (isset($_GET['id'])) {
+		if (isset($this->_arrParam['id'])) {
 			$this->_view->setTitle('Edit Rss | ZendVn');
 			$this->_view->title = 'EDIT RSS';
-			$linkDirect .= "&id={$_GET['id']}";
-			$this->_view->item = $this->_model->listItem($_GET['id']);
+			$linkDirect .= "&id={$this->_arrParam['id']}";
+			$this->_view->item = $this->_model->getItem($this->_arrParam['id']);
 		}
 
 
 
 		if (!empty($_POST)) {
-			if ($_SESSION['token'] == $_POST['token']) {
-				unset($_SESSION['token']);
+			if (Session::get('token') == $this->_arrParam['token']) {
+				Session::del($this->_arrParam['token']);
 				URL::redirect($linkDirect);
 			} else {
-				$_SESSION['token'] = $_POST['token'];
+				Session::set('token', $this->_arrParam['token']);
 			}
-			unset($_POST['token']);
+			Session::del($this->_arrParam['token']);
 			$validate = new Validate($_POST);
 			$validate->addRule('link', 'url')
 				->addRule('ordering', 'int', ["min" => 1, "max" => 10])
@@ -63,7 +61,7 @@ class RssController extends Controller
 				Session::set('form', 'Thêm');
 				if (isset($_GET['id'])) {
 					Session::set('form', 'Sửa');
-					$params['id'] = $_GET['id'];
+					$params['id'] = $this->_arrParam['id'];
 					$this->_model->updateItem($params);
 				} else {
 					$this->_model->insertItem($params);
@@ -76,12 +74,12 @@ class RssController extends Controller
 	}
 	public function deleteAction()
 	{
-		if (isset($_GET['id'])) $this->_model->deleteItem($_GET['id']);
+		if (isset($this->_arrParam['id'])) $this->_model->deleteItem($this->_arrParam['id']);
 		URL::redirect(URL::createLink('admin', 'rss', 'index'));
 	}
 	public function logoutAction()
 	{
-		session_unset(); 
+		session_unset();
 		URL::redirect(URL::createLink('default', 'index', 'index'));
 	}
 }

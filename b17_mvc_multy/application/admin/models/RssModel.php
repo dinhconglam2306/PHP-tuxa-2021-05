@@ -15,7 +15,7 @@ class RssModel extends Model
 		$result		= $this->listRecord($query);
 		return $result;
 	}
-	public function listItem($id, $options = null)
+	public function getItem($id, $options = null)
 	{
 		$query[] 	= "SELECT `link`, `status`,`ordering`";
 		$query[] 	= "FROM `rss`";

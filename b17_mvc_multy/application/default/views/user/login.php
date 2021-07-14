@@ -1,24 +1,5 @@
 <?php
-$mess = '';
-if ($_SESSION['flagPermission'] == true) {
-  if ($_SESSION['timeout'] + 3600 > time()) {
-    URL::redirect(URL::createLink('admin', 'rss', 'index'));
-  } else {
-    session_unset();
-    URL::redirect(URL::createLink('default', 'index', 'index'));
-  }
-} else {
-  if (!empty($_POST)) {
-    if (!empty($this->user)) {
-      $_SESSION['flagPermission'] = true;
-      $_SESSION['timeout']         = time();
-      URL::redirect(URL::createLink('admin', 'rss', 'index'));
-    } else {
-      $mess = '<div class="alert alert-danger" role="alert">Tài khoản hoặc mật khẩu không đúng.</div>';
-    }
-  }
-}
-
+  $mess = $this->error ?? '';
 //Name
 $labelName = Form::labelLogin('username', 'Username', false);
 $InputName = Form::inputLogin('text', 'username', 'username', $_POST['username']);
