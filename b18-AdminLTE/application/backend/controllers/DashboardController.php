@@ -1,5 +1,5 @@
 <?php
-class IndexController extends Controller{
+class DashboardController extends Controller{
 	
 	public function __construct($arrParams){
 		parent::__construct($arrParams);
@@ -10,10 +10,8 @@ class IndexController extends Controller{
 	}
 	
 	public function indexAction(){
-
-		$this->_view->items  = $this->_model->listItems();
-		$this->_view->setTitle('News | ZendVn');
-		$this->_view->render('index/index', true);
+		$this->_view->setTitle('Admin Panel');
+		$this->_view->render('user/index');
 	}
 	
 }
