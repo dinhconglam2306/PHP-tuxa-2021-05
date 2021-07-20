@@ -135,7 +135,7 @@ class Model{
 	// DELETE
 	public function delete($where){
 		$newWhere 	= $this->createWhereDeleteSQL($where);
-		$query 		= "DELETE FROM `$this->table` WHERE `id` IN ($newWhere)";
+		echo $query 		= "DELETE FROM `$this->table` WHERE `id` IN ($newWhere)";
 		$this->query($query);
 		return $this->affectedRows();
 	}

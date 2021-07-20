@@ -23,3 +23,8 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'bookstore');
 define('DB_TABLE', 'group');
+
+// ====================== DATABASE GROUP ===========================
+define('TBL_GROUP', 'group');
+
+

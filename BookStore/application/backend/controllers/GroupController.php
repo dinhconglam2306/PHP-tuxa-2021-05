@@ -24,15 +24,19 @@ class GroupController extends Controller
 		$this->_view->pageHeader = 'Group Controller :: List';
 		$this->_view->render('group/form');
 	}
-	public function changeBtnAction()
+	public function changeStatusAction()
 	{
-		$this->_model->changeBtn($this->_arrParam);
+		$this->_model->changeStatus($this->_arrParam);
+		URL::redirect(URL::createLink("backend", "group", "index"));
+	}
+	public function changeGroupAcpAction()
+	{
+		$this->_model->changeGroupAcp($this->_arrParam);
 		URL::redirect(URL::createLink("backend", "group", "index"));
 	}
 	public function deleteAction()
 	{
-	echo '<pre>';
-	print_r ($this->_arrParam);
-	echo '</pre>';
+		if (isset($this->_arrParam['id'])) $this->_model->deleteItem($this->_arrParam['id']);
+		URL::redirect(URL::createLink("backend", "group", "index"));
 	}
 }

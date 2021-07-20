@@ -1,6 +1,6 @@
 <?php
 
-class Helper
+class Helperbackend
 {
     // Tạo HTML cho index DashBoard
     public static function createHtmlDashboard($h3, $p, $icon, $href = "#")
@@ -29,7 +29,8 @@ class Helper
             $btnClass = 'btn-danger';
             $btnIcon  = 'fa-minus';
         };
-        $xhtml = ' <a href="index.php?module=' . $module . '&controller=' . $controller . '&action=changeBtn&id=' . $id . '&status=' . $status . '" class="btn ' . $btnClass . ' rounded-circle btn-sm"><i class="fas ' . $btnIcon . '"></i></a>';
+        $url = URL::createLink($module, $controller, "changeStatus", "&id=$id&status=$status");
+        $xhtml = sprintf(' <a href="' . $url . '" class="btn %s rounded-circle btn-sm"><i class="fas %s"></i></a>', $btnClass, $btnIcon);
         return $xhtml;
     }
     public static function showGroupAcp($module, $controller, $id, $groupAcp)
@@ -40,29 +41,27 @@ class Helper
             $btnClass = 'btn-danger';
             $btnIcon  = 'fa-minus';
         };
-        $xhtml = ' <a href="index.php?module=' . $module . '&controller=' . $controller . '&action=changeBtn&id=' . $id . '&status=' . $groupAcp . '" class="btn ' . $btnClass . ' rounded-circle btn-sm"><i class="fas ' . $btnIcon . '"></i></a>';
+        $url = URL::createLink($module, $controller, "changeGroupAcp", "&id=$id&status=$groupAcp");
+        $xhtml = sprintf(' <a href="' . $url . '" class="btn %s rounded-circle btn-sm"><i class="fas %s"></i></a>', $btnClass, $btnIcon);
         return $xhtml;
     }
 
-
-    //Tạo div có class nav-item
-
-    public static function navItemClass($href,$icon,$title,$titleIcon='',$flag=true)
+    //Tạo HTML Created
+    public static function createdHTML($createdBy, $created)
     {
-        // $xhtml ='';
-        // if($flag == true){
-        //     $xhtml = '
-        //     <li class="nav-item">
-        //         <a href="'.$href.'" class="nav-link">
-        //             <i class="far '.$icon.'"></i>
-        //             <p>'.$title.'</p>
-        //         </a>
-        //     </li>
-        //     ';
-        // }else {
-
-        // }
-       
-        // return $xhtml;
+        $xhtml = '
+        <p class="mb-0"><i class="far fa-user"></i> ' . $createdBy . '</p>
+        <p class="mb-0"><i class="far fa-clock"></i> ' . $created . '</p>
+        ';
+        return $xhtml;
+    }
+     //Tạo HTML Modified
+    public static function modifiedHTML($modifiedBy, $modified)
+    {
+        $xhtml = '
+        <p class="mb-0"><i class="far fa-user"></i> ' . $modifiedBy . '</p>
+        <p class="mb-0"><i class="far fa-clock"></i> ' . $modified . '</p>
+        ';
+        return $xhtml;
     }
 }
