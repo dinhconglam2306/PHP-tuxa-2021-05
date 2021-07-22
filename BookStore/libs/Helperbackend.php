@@ -55,13 +55,31 @@ class Helperbackend
         ';
         return $xhtml;
     }
-     //Tạo HTML Modified
+    //Tạo HTML Modified
     public static function modifiedHTML($modifiedBy, $modified)
     {
         $xhtml = '
         <p class="mb-0"><i class="far fa-user"></i> ' . $modifiedBy . '</p>
         <p class="mb-0"><i class="far fa-clock"></i> ' . $modified . '</p>
         ';
+        return $xhtml;
+    }
+
+    //Tạo highlight
+    public static function highLight($search, $name)
+    {
+        if($search !=''){
+           return preg_replace('/' . preg_quote($search, '/') .'/ui','<mark>$0</mark>',$name);
+        }
+        return $name;
+    }
+
+    //Tạo thẻ a trong Search-Filter
+    public static function elmA($id,$href,$class,$aTitle,$spanTitle){
+        $xhtml='
+        <a id= "'.$id.'" href="'.$href.'" class="btn '.$class.'">'.$aTitle.' <span class="badge badge-pill badge-light">'.$spanTitle.'</span></a>
+        ';
+
         return $xhtml;
     }
 }

@@ -1,6 +1,5 @@
 <div class="card-header">
     <h3 class="card-title">List</h3>
-
     <div class="card-tools">
         <a href="#" class="btn btn-tool" data-card-widget="refresh">
             <i class="fas fa-sync-alt"></i>

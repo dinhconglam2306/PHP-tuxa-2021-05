@@ -1,6 +1,6 @@
 <?php 
-    $pageHeader = $this->_arrParams['controller']." Controller";
-    if($this->_arrParams['controller'] == 'dashboard') $pageHeader = $this->_arrParams['controller'];
+    $pageHeader = $this->_arrParam['controller']." Controller";
+    if($this->_arrParam['controller'] == 'dashboard') $pageHeader = $this->_arrParam['controller'];
 ?>
 <div class="content-header">
     <div class="container-fluid">

@@ -1,12 +1,14 @@
 <?php
-$params = $this->_arrParams;
+$params = $this->_arrParam;
 $module = $params['module'];
 $controller = $params['controller'];
+$searchValue = isset($this->_arrParam['search'])? trim($this->_arrParam['search']) : '';
 
 $xhtml = '';
 foreach ($this->items as $item) {
     $id         = $item['id'];
-    $name       = $item['name'];
+    $name       = Helperbackend::highLight($searchValue,$item['name']);
+    // $name = $item['name'];
     $status     = Helperbackend::showStatus($module, $controller, $id, $item['status']);
     $groupAcp   = Helperbackend::showGroupAcp($module, $controller, $id, $item['group_acp']);
     $created    = Helperbackend::createdHTML($item['created_by'], $item['created']);
@@ -15,7 +17,7 @@ foreach ($this->items as $item) {
     $linkDelete = URL::createLink($module, $controller, 'delete', "&id=$id");
     $xhtml .= '
     <tr>
-        <td><input type="checkbox" class="check"></td>
+        <td><input type="checkbox" name="cid[]" value="'.$id.'"></td>
         <td>' . $id . '</td>
         <td>' . $name . '</td>
         <td>' . $groupAcp . '</td>
@@ -33,7 +35,7 @@ foreach ($this->items as $item) {
 <table class="table align-middle text-center table-bordered">
     <thead>
         <tr>
-            <th><input type="checkbox" onclick="toggle(this)"></th>
+            <th><input type="checkbox" id="check-all"></th>
             <th>ID</th>
             <th>Name</th>
             <th>Group ACP</th>

@@ -15,7 +15,7 @@ class GroupController extends Controller
 	{
 		$this->_view->setTitle('Admin Panel');
 		$this->_view->pageHeader = 'Group Controller :: List';
-		$this->_view->items = $this->_model->listItems();
+		$this->_view->items = $this->_model->listItems($this->_arrParam);
 		$this->_view->render('group/index');
 	}
 	public function formAction()
@@ -26,7 +26,7 @@ class GroupController extends Controller
 	}
 	public function changeStatusAction()
 	{
-		$this->_model->changeStatus($this->_arrParam);
+		$this->_model->changeStatus($this->_arrParam, ['task' => 'change-status']);
 		URL::redirect(URL::createLink("backend", "group", "index"));
 	}
 	public function changeGroupAcpAction()
@@ -38,5 +38,11 @@ class GroupController extends Controller
 	{
 		if (isset($this->_arrParam['id'])) $this->_model->deleteItem($this->_arrParam['id']);
 		URL::redirect(URL::createLink("backend", "group", "index"));
+	}
+	public function changeMultyStatusAction()
+	{
+		$this->_model->changeStatus($this->_arrParam, ['task' => 'change-multy-status']);
+		URL::redirect(URL::createLink("backend", "group", "index"));
+	
 	}
 }

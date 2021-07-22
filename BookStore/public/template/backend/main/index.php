@@ -54,9 +54,6 @@
     <!-- ./wrapper -->
     <?php echo $this->_pluginsJsFiles; ?>
     <?php echo $this->_jsFiles; ?>
-    <script>
-        $(document).ready()
-    </script>
 </body>
 
 </html>
