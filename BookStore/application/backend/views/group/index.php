@@ -1,13 +1,16 @@
 <?php
-$arrStatus   = ['default' => 'Bulk Action', 'delete' => 'Delete', 'inactive' => 'Inactive', 'active' => 'Active'];
-$selectBox = Form::createSelectbox($arrStatus, 'slbStatus', '', 'form-control custom-select');
+$params = $this->_arrParam;
+$module = $params['module'];
+$controller = $params['controller'];
+$arrStatus   = ['default' => 'Bulk Action', 'delete' => 'Delete', 'multyInactive' => 'Inactive', 'multyActive' => 'Active'];
+$selectBox = Form::createSelectbox("select-box",$arrStatus, 'slbStatus', '', 'form-control custom-select');
 ?>
 <div class="col-12">
 
     <!-- Search & Filter -->
     <?php require_once 'elements/list_search_filter.php'; ?>
     <!-- List -->
-    <form action="#" method="post" name="backend" id="group-form">
+    <form action="#" method="post" name="backend" id="admin-form">
         <div class="card card-outline card-info">
             <!-- Card Header -->
             <?php require_once 'elements/list_card_header.php'; ?>
@@ -18,7 +21,9 @@ $selectBox = Form::createSelectbox($arrStatus, 'slbStatus', '', 'form-control cu
                             <div class="input-group">
                                 <?= $selectBox; ?>
                                 <span class="input-group-append">
-                                    <button type="button" id=submit-apply class="btn btn-info apply">Apply</button>
+                                    <button type="button" id=submit-apply class="btn btn-info apply" data-url="<?= 
+                                    URL::createLink($module,$controller,"value_new");
+                                    ?>">Apply</button>
                                 </span>
                             </div>
                         </div>

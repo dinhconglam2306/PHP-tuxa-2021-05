@@ -1,20 +1,16 @@
 <?php
-$params = $this->_arrParam;
-$module = $params['module'];
-$controller = $params['controller'];
-$searchValue = isset($this->_arrParam['search'])? trim($this->_arrParam['search']) : '';
-
+$searchValue = trim(@$params['search']);
 $xhtml = '';
 foreach ($this->items as $item) {
     $id         = $item['id'];
-    $name       = Helperbackend::highLight($searchValue,$item['name']);
+    $name       = HelperBackend::highLight($searchValue,$item['name']);
     // $name = $item['name'];
-    $status     = Helperbackend::showStatus($module, $controller, $id, $item['status']);
-    $groupAcp   = Helperbackend::showGroupAcp($module, $controller, $id, $item['group_acp']);
-    $created    = Helperbackend::createdHTML($item['created_by'], $item['created']);
-    $modified   = Helperbackend::modifiedHTML($item['modified_by'], $item['modified']);
-    $linkEdit   = URL::createLink($module, $controller, 'form', "&id=$id");
-    $linkDelete = URL::createLink($module, $controller, 'delete', "&id=$id");
+    $status     = HelperBackend::showStatus($module, $controller, $id, $item['status']);
+    $groupAcp   = HelperBackend::showGroupAcp($module, $controller, $id, $item['group_acp']);
+    $created    = HelperBackend::createdHTML($item['created_by'], $item['created']);
+    $modified   = HelperBackend::modifiedHTML($item['modified_by'], $item['modified']);
+    $linkEdit   = URL::createLink($module, $controller, 'form', ["id"=>$id]);
+    $linkDelete = URL::createLink($module, $controller, 'delete', ["id"=>$id]);
     $xhtml .= '
     <tr>
         <td><input type="checkbox" name="cid[]" value="'.$id.'"></td>

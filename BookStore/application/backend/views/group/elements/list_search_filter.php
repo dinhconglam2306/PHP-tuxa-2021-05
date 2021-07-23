@@ -1,11 +1,15 @@
 <?php
-$searchValue = isset($this->_arrParam['search']) ? trim($this->_arrParam['search']) : '';
-$itemsLength = count($this->items);
-$activeLength = 0;
-foreach ($this->items as $item) {
-    if ($item['status'] == 'active') $activeLength++;
+echo '<pre>';
+print_r ($this->arrFilter);
+echo '</pre>';
+foreach ($this->arrFilter as $key => $value) {
+    $btnClass = 'btn-secondary';
+    // (@$this->_arrParam['status']?? '') ? ($btnClass = 'btn-info') : $btnClass;
+    (@$this->_arrParam['status']?? $key) ? ($btnClass = 'btn-info') : $btnClass;
+    @$filter .=  HelperBackend::showActive($module, $controller, ['status' => $key], ucfirst($key), $value, $btnClass);
 }
-$inActiveLength = $itemsLength - $activeLength;
+
+$searchValue = isset($this->_arrParam['search']) ? trim($this->_arrParam['search']) : '';
 ?>
 <div class="card card-outline card-info">
     <div class="card-header">
@@ -21,9 +25,7 @@ $inActiveLength = $itemsLength - $activeLength;
         <div class="container-fluid">
             <div class="row justify-content-between align-items-center">
                 <div class="area-filter-status mb-2">
-                    <?= Helperbackend::elmA('filter-all', '#', 'btn-info', 'All', $itemsLength); ?>
-                    <?= Helperbackend::elmA('filter-active', '#', 'btn-secondary', 'Active', $activeLength); ?>
-                    <?= Helperbackend::elmA('filter-inactive', '#', 'btn-secondary', 'Inactive', $inActiveLength); ?>
+                    <?= $filter ?>
                 </div>
                 <div class="area-search mb-2">
                     <form action="" method="GET">

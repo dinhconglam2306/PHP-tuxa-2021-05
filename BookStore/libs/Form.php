@@ -1,11 +1,11 @@
 <?php
 class Form
 {
-    public static function createSelectbox($arrData, $name, $keySelected = null, $class = null)
+    public static function createSelectbox($id,$arrData, $name, $keySelected = null, $class = null)
     {
         $xhtml = "";
         if (!empty($arrData)) {
-            $xhtml = '<select id="select-box" class="' . $class . '" name="' . $name . '">';
+            $xhtml = '<select id="'.$id.'" class="' . $class . '" name="' . $name . '">';
             foreach ($arrData as $key => $value) {
                 if ($keySelected == $key && $keySelected != null) {
                     $xhtml .= '<option value="' . $key . '" selected="true">' . $value . '</option>';

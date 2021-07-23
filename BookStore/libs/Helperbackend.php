@@ -1,6 +1,6 @@
 <?php
 
-class Helperbackend
+class HelperBackend
 {
     // Tạo HTML cho index DashBoard
     public static function createHtmlDashboard($h3, $p, $icon, $href = "#")
@@ -29,10 +29,20 @@ class Helperbackend
             $btnClass = 'btn-danger';
             $btnIcon  = 'fa-minus';
         };
-        $url = URL::createLink($module, $controller, "changeStatus", "&id=$id&status=$status");
+        $url = URL::createLink($module, $controller, "changeStatus", ["id" => $id, "status" => $status]);
         $xhtml = sprintf(' <a href="' . $url . '" class="btn %s rounded-circle btn-sm"><i class="fas %s"></i></a>', $btnClass, $btnIcon);
         return $xhtml;
     }
+
+
+    //showActive Filter_Search
+    public static function showActive($module, $controller, $status, $title,$num,$btnClass)
+    {
+        $url = URL::createLink($module, $controller, "index", $status);
+        $xhtml = ' <a href="' . $url . '" class="btn '.$btnClass.'">' . $title . ' <span class="badge badge-pill badge-light">'.$num.'</span></a>';
+        return $xhtml;
+    }
+
     public static function showGroupAcp($module, $controller, $id, $groupAcp)
     {
         $btnClass = 'btn-success';
@@ -41,7 +51,7 @@ class Helperbackend
             $btnClass = 'btn-danger';
             $btnIcon  = 'fa-minus';
         };
-        $url = URL::createLink($module, $controller, "changeGroupAcp", "&id=$id&status=$groupAcp");
+        $url = URL::createLink($module, $controller, "changeGroupAcp", ["id" => $id, "status" => $groupAcp]);
         $xhtml = sprintf(' <a href="' . $url . '" class="btn %s rounded-circle btn-sm"><i class="fas %s"></i></a>', $btnClass, $btnIcon);
         return $xhtml;
     }
@@ -68,16 +78,17 @@ class Helperbackend
     //Tạo highlight
     public static function highLight($search, $name)
     {
-        if($search !=''){
-           return preg_replace('/' . preg_quote($search, '/') .'/ui','<mark>$0</mark>',$name);
+        if ($search != '') {
+            return preg_replace('/' . preg_quote($search, '/') . '/ui', '<mark>$0</mark>', $name);
         }
         return $name;
     }
 
     //Tạo thẻ a trong Search-Filter
-    public static function elmA($id,$href,$class,$aTitle,$spanTitle){
-        $xhtml='
-        <a id= "'.$id.'" href="'.$href.'" class="btn '.$class.'">'.$aTitle.' <span class="badge badge-pill badge-light">'.$spanTitle.'</span></a>
+    public static function elmA($id, $href, $class, $aTitle, $spanTitle)
+    {
+        $xhtml = '
+        <a id= "' . $id . '" href="' . $href . '" class="btn ' . $class . '">' . $aTitle . ' <span class="badge badge-pill badge-light">' . $spanTitle . '</span></a>
         ';
 
         return $xhtml;
