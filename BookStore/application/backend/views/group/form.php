@@ -1,41 +1,37 @@
-<div class="col-12">
-    <div class="alert alert-danger alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h5><i class="icon fas fa-exclamation-triangle"></i> Lỗi!</h5>
-        <ul class="list-unstyled mb-0">
-            <li class="text-white"><b>Name:</b> Giá trị này không được rỗng!</li>
-            <li class="text-white"><b>Group ACP:</b> Vui lòng chọn giá trị</li>
-            <li class="text-white"><b>Status:</b> Vui lòng chọn giá trị!</li>
-        </ul>
-    </div>
-    <form action="">
-        <div class="card card-outline card-info">
-            <div class="card-body">
-                <div class="form-group">
-                    <label>Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="name">
-                </div>
-                <div class="form-group">
-                    <label>Group ACP <span class="text-danger">*</span></label>
-                    <select class="custom-select">
-                        <option selected> - Select Group ACP - </option>
-                        <option>Active</option>
-                        <option>Inactive</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Status <span class="text-danger">*</span></label>
-                    <select class="custom-select">
-                        <option selected> - Select Status - </option>
-                        <option>Active</option>
-                        <option>Inactive</option>
-                    </select>
-                </div>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-success">Save</button>
-                <a href="index.php?module=backend&controller=group&action=index" class="btn btn-danger">Cancel</a>
-            </div>
+<?php
+$dataForm = @$this->arrParam['form'];
+$dataForm['group_acp']  = ($dataForm['group_acp'] == 1) ? 'active' : 'inactive';
+//Input
+$inputName = Form::createInput('text','form-control','form[name]',@$dataForm['name']);
+$inputHidden = Form::createInput('hidden','form-control','form[token]',time());
+
+//Select Box GroupACP
+$arrValueGACP = ['default' => ' - Select Group ACP - ', 'active'=> 'Active', 'inactive' => 'Inactive'];
+$selectBoxGACP = Form::createSelectbox('form[group_acp]','custom-select',$arrValueGACP,@$dataForm['group_acp']);
+
+//Select Box Status
+$arrValueStatus = ['default' => ' - Select Status - ', 'active' => 'Active', 'inactive' => 'Inactive'];
+$selectBoxStatus = Form::createSelectbox('form[status]','custom-select',$arrValueStatus,@$dataForm['status']);
+
+//Row Form
+
+$rowName = Form::createRowForm('Name',$inputName,null);
+$rowGroupACP = Form::createRowForm('Group ACP ',$inputName,$selectBoxGACP,false);
+$rowGroupStatus = Form::createRowForm('Status ',$inputName,$selectBoxStatus,false);
+$rows = $rowName . $rowGroupACP . $rowGroupStatus;
+
+$xhtmlError = $this->error?? '';
+?>
+<?=$xhtmlError ;?>
+<form action="#" method="post" name="adminForm" id="adminForm">
+    <div class="card card-outline card-info">
+        <div class="card-body">
+        <?= $rows ?>
         </div>
-    </form>
-</div>
+        <div class="card-footer">
+            <?= $inputHidden ;?>
+            <button type="submit" class="btn btn-success">Save</button>
+            <a href="<?=URL::createLink('backend','group','index')?>" class="btn btn-danger">Cancel</a>
+        </div>
+    </div>
+</form>

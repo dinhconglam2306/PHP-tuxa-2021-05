@@ -1,11 +1,10 @@
 <?php
 class GroupController extends Controller
 {
-
 	public function __construct($arrParams)
 	{
 		parent::__construct($arrParams);
-		$this->_templateObj->setFolderTemplate('backend/main/');
+		$this->_templateObj->setFolderTemplate('backend/adminlte/');
 		$this->_templateObj->setFileTemplate('index.php');
 		$this->_templateObj->setFileConfig('template.ini');
 		$this->_templateObj->load();
@@ -13,49 +12,81 @@ class GroupController extends Controller
 
 	public function indexAction()
 	{
-		$this->_view->setTitle('Admin Panel');
-		$this->_view->pageHeader = ucfirst($this->_arrParam['module']) . ' Controller :: List';
-		$this->_view->items = $this->_model->listItems($this->_arrParam);
-		$countItem = $this->_model->countItems($this->_arrParam);
-		foreach ($countItem as $key => $item) {
-			$arr[] = [$item['status'] => $item['total']];
-			foreach ($arr as $item) {
-				foreach ($item as $key => $value) {
-					$arrFilter[$key] = $value;
-				}
-			}
-		}
-		if(!isset($arrFilter['acitve']))  $arrFilter = array_merge(['active'=> 0],$arrFilter);
-		if(!isset($arrFilter['inactive']))  $arrFilter = array_merge($arrFilter,['inactive'=> 0]);
-		$countAll = array_sum($arrFilter);
-		$arrFilter = array_merge(['all' => $countAll], $arrFilter);
-		$this->_view->arrFilter = $arrFilter;
-		$this->_view->render("group/index");
+		$this->_view->_title 				= 'Group Controller :: List';
+		//Total Items
+		$this->_view->itemsStatusCount 		= $this->_model->countItems($this->_arrParam, ['task' => 'count-items-status']);
+		$itemCount 	= $this->_model->countItems($this->_arrParam, ['task' => 'count-items-status']);
+		$configPagination  = ['totalItemsPerPage' => 4, 'pageRange' => 3];
+		$this->setPagination($configPagination);
+		$status = $this->_arrParam['status'] ?? 'all';
+		$this->_view->pagination 			= new Pagination($itemCount[$status], $this->_pagination);
+		//List Items
+		$this->_view->items 				= $this->_model->listItems($this->_arrParam);
+		$this->_view->render('group/index');
 	}
-	public function formAction()
+
+	public function changeGroupACPAction()
 	{
-		$this->_view->setTitle('Admin Panel');
-		$this->_view->pageHeader =  ucfirst($this->_arrParam['module']) . ' Controller :: List';
-		$this->_view->render('group/form');
+		$this->_model->changeGroupACP($this->_arrParam);
+		URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
 	}
+
 	public function changeStatusAction()
 	{
-		$this->_model->changeStatus($this->_arrParam, ['task' => 'change-status']);
-		URL::redirect(URL::createLink($this->_arrParam['module'], $this->_arrParam['controller'], "index"));
+		$this->_model->changeStatus($this->_arrParam);
+		URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
 	}
-	public function changeGroupAcpAction()
-	{
-		$this->_model->changeGroupAcp($this->_arrParam);
-		URL::redirect(URL::createLink($this->_arrParam['module'], $this->_arrParam['controller'], "index"));
-	}
+
 	public function deleteAction()
 	{
 		$this->_model->deleteItem($this->_arrParam);
-		URL::redirect(URL::createLink($this->_arrParam['module'], $this->_arrParam['controller'], "index"));
+		URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
 	}
-	public function changeMultyStatusAction()
+
+	public function multiActiveAction()
 	{
-		$this->_model->changeStatus($this->_arrParam, ['task' => 'change-multy-status']);
-		URL::redirect(URL::createLink($this->_arrParam['module'], $this->_arrParam['controller'], "index"));
+		$this->_model->multiStatus($this->_arrParam, ['task' => 'active']);
+		URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
+	}
+
+	public function multiInactiveAction()
+	{
+		$this->_model->multiStatus($this->_arrParam, ['task' => 'inactive']);
+		URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
+	}
+
+	public function multiDeleteAction()
+	{
+		$this->_model->deleteItem($this->_arrParam);
+		URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
+	}
+
+	public function formAction()
+	{
+		$this->_view->_title = 'Group Controller :: Add';
+		// if(isset($this->_arrParam['id'])){
+		// 	$this->_view->_title = 'Group Controller :: Edit';
+		// 	$this->_arrParam['form'] = $this->_model->infoItem($this->_arrParam);
+		// }
+		if(@$this->_arrParam['form']['token'] > 0){
+			$validate = new Validate($this->_arrParam['form']);
+			$validate->addRule('name','string',['min'=>3, 'max'=>30])
+					 ->addRule('group_acp','status')
+					 ->addRule('status','status');
+			$validate->run();
+			$this->_arrParam['form'] = $validate->getResult();
+			if($validate->isValid() == false){
+				$this->_view->error = $validate->showErrors();
+			}else{
+				//Insert Database
+				echo '<pre>';
+				print_r ($this->_arrParam);
+				echo '</pre>';
+				// $this->_model->saveItem($this->_arrParam,['task'=>'add']);
+				// URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
+			}
+		}
+		$this->_view->arrParam = $this->_arrParam;
+		$this->_view->render('group/form');
 	}
 }

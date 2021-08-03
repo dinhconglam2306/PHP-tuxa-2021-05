@@ -2,95 +2,118 @@
 
 class HelperBackend
 {
-    // Tạo HTML cho index DashBoard
-    public static function createHtmlDashboard($h3, $p, $icon, $href = "#")
+    //Create button
+    public static function button($type, $name, $class = 'btn-info', $options = ['small' => false, 'circle' => false])
     {
-        $xhtml = '
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>' . $h3 . '</h3>
-                    <p>' . $p . '</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ' . $icon . '"></i>
-                </div>
-                <a href="' . $href . '" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>';
-        return $xhtml;
-    }
-    //show Status
-    public static function showStatus($module, $controller, $id, $status)
-    {
-        $btnClass = 'btn-success';
-        $btnIcon  = 'fa-check';
-        if ($status == 'inactive') {
-            $btnClass = 'btn-danger';
-            $btnIcon  = 'fa-minus';
-        };
-        $url = URL::createLink($module, $controller, "changeStatus", ["id" => $id, "status" => $status]);
-        $xhtml = sprintf(' <a href="' . $url . '" class="btn %s rounded-circle btn-sm"><i class="fas %s"></i></a>', $btnClass, $btnIcon);
-        return $xhtml;
+        $optionsClass = '';
+        if ($options['small']) $optionsClass .= ' btn-sm';
+        if ($options['circle']) $optionsClass .= ' rounded-circle';
+        return sprintf('<button type="%s" class="btn %s %s">%s</button>', $type, $class, $optionsClass, $name);
     }
 
-
-    //showActive Filter_Search
-    public static function showActive($module, $controller, $status, $title,$num,$btnClass)
+    //Create button link
+    public static function buttonLink($link, $name, $class = 'btn-info', $options = ['small' => false, 'circle' => false])
     {
-        $url = URL::createLink($module, $controller, "index", $status);
-        $xhtml = ' <a href="' . $url . '" class="btn '.$btnClass.'">' . $title . ' <span class="badge badge-pill badge-light">'.$num.'</span></a>';
-        return $xhtml;
+        $optionsClass = '';
+        if ($options['small']) $optionsClass .= ' btn-sm';
+        if ($options['circle']) $optionsClass .= ' rounded-circle';
+        return sprintf('<a href="%s" class="btn %s %s">%s</a>', $link, $class, $optionsClass, $name);
     }
 
-    public static function showGroupAcp($module, $controller, $id, $groupAcp)
+    //Create Icon Group ACP
+    public static function itemGroupACP($module, $controller, $id, $value)
     {
-        $btnClass = 'btn-success';
-        $btnIcon  = 'fa-check';
-        if ($groupAcp == 0) {
-            $btnClass = 'btn-danger';
-            $btnIcon  = 'fa-minus';
-        };
-        $url = URL::createLink($module, $controller, "changeGroupAcp", ["id" => $id, "status" => $groupAcp]);
-        $xhtml = sprintf(' <a href="' . $url . '" class="btn %s rounded-circle btn-sm"><i class="fas %s"></i></a>', $btnClass, $btnIcon);
-        return $xhtml;
-    }
+        $link = URL::createLink($module, $controller, 'changeGroupACP', ['id' => $id, 'group_acp' => $value]);
+        $colorClass = 'btn-success';
+        $icon = 'fa-check';
 
-    //Tạo HTML Created
-    public static function createdHTML($createdBy, $created)
-    {
-        $xhtml = '
-        <p class="mb-0"><i class="far fa-user"></i> ' . $createdBy . '</p>
-        <p class="mb-0"><i class="far fa-clock"></i> ' . $created . '</p>
-        ';
-        return $xhtml;
-    }
-    //Tạo HTML Modified
-    public static function modifiedHTML($modifiedBy, $modified)
-    {
-        $xhtml = '
-        <p class="mb-0"><i class="far fa-user"></i> ' . $modifiedBy . '</p>
-        <p class="mb-0"><i class="far fa-clock"></i> ' . $modified . '</p>
-        ';
-        return $xhtml;
-    }
-
-    //Tạo highlight
-    public static function highLight($search, $name)
-    {
-        if ($search != '') {
-            return preg_replace('/' . preg_quote($search, '/') . '/ui', '<mark>$0</mark>', $name);
+        if ($value == 0) {
+            $colorClass = 'btn-danger';
+            $icon = 'fa-minus';
         }
-        return $name;
+
+        return sprintf('<a href="%s" class="btn %s rounded-circle btn-sm"><i class="fas %s"></i></a>', $link, $colorClass, $icon);
     }
 
-    //Tạo thẻ a trong Search-Filter
-    public static function elmA($id, $href, $class, $aTitle, $spanTitle)
+    //Create Icon Status
+    public static function itemStatus($module, $controller, $id, $value)
     {
-        $xhtml = '
-        <a id= "' . $id . '" href="' . $href . '" class="btn ' . $class . '">' . $aTitle . ' <span class="badge badge-pill badge-light">' . $spanTitle . '</span></a>
-        ';
+        $link = URL::createLink($module, $controller, 'changeStatus', ['id' => $id, 'status' => $value]);
+        $colorClass = 'btn-success';
+        $icon = 'fa-check';
 
+        if ($value == 'inactive') {
+            $colorClass = 'btn-danger';
+            $icon = 'fa-minus';
+        }
+
+        return sprintf('<a href="%s" class="btn %s rounded-circle btn-sm"><i class="fas %s"></i></a>', $link, $colorClass, $icon);
+    }
+
+    //Create history item
+    public static function itemHistory($by, $time)
+    {
+        if ($time) $time = date('H:i:s d/m/Y', strtotime($time));
+        $xhtml = sprintf('
+        <p class="mb-0"><i class="far fa-user"></i> %s</p>
+        <p class="mb-0"><i class="far fa-clock"></i> %s</p>
+        ', $by, $time);
         return $xhtml;
     }
+
+    // Create HighLight
+    public static function highlight($search, $value)
+    {
+        if (!empty(trim($search))) {
+            return preg_replace('/' . preg_quote($search, '/') . '/ui', '<mark>$0</mark>', $value);
+        }
+
+        return $value;
+    }
+
+    //Create show filterStatus
+    public static function showFilterStatus($module, $controller, $itemsStatusCount, $currentFilterStatus, $searchValue)
+    {
+        $xhtml = '';
+        foreach ($itemsStatusCount as $key => $value) {
+            $classColor = $key == $currentFilterStatus ? 'btn-info' : 'btn-secondary';
+            $params = ['status' => $key];
+
+            if (!empty($searchValue)) $params['search'] = $searchValue;
+
+            $link = URL::createLink($module, $controller, 'index', $params);
+            $name = '';
+            switch ($key) {
+                case 'all':
+                    $name = 'All';
+                    break;
+                case 'active':
+                    $name = 'Active';
+                    break;
+                case 'inactive':
+                    $name = 'Inactive';
+                    break;
+            }
+            $xhtml .= sprintf('<a href="%s" class="btn %s">%s <span class="badge badge-pill badge-light">%s</span></a> ', $link, $classColor, $name, $value);
+        }
+        return $xhtml;
+    }
+
+
+    //Create Message
+    public static function createMessage($message)
+    {
+        $xhtml = '';
+        if (!empty($message)) {
+            $xhtml = '<div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <ul class="list-unstyled mb-0">
+                <li class="text-white">' . $message . '</li>
+            </ul>
+        </div>';
+        }
+        return $xhtml;
+    }
+
+    
 }
