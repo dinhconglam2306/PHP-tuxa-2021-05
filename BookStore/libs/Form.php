@@ -3,17 +3,16 @@
 class Form
 {
     //Create SelectBox
-    public static function createSelectbox($name, $class, $arrValue, $keySelected = 0)
+    public static function createSelectbox($name, $class, $arrValue, $keySelected = 'default')
     {
-        $xhtml = '<select name="'.$name.'" class="' . $class . '">';
+       $xhtmlOption='';
         foreach ($arrValue as $key => $value) {
-            if ($key == $keySelected) {
-                $xhtml .= '<option value="' . $key . '" selected="selected">' . $value . '</option>';
-            } else {
-                $xhtml .= '<option value="' . $key . '">' . $value . '</option>';
-            }
+            $selected='';
+            if(is_numeric($key)) $key = strval($key);
+            if($key === $keySelected) $selected ='selected';
+            $xhtmlOption.=sprintf('<option value="%s" %s>%s</option>',$key,$selected,$value);
         }
-        $xhtml .= '</select>';
+        $xhtml = sprintf('<select name="%s" class="%s">%s</select>',$name,$class,$xhtmlOption);
         return $xhtml;
     }
 
@@ -40,7 +39,7 @@ class Form
 
     public static function createButtonForm($type,$class,$title)
     {
-        $xhtml='<button type="'.$type.'" class="'.$class.'">'.$title.'</button>';
+        $xhtml=sprintf('<button type="%s" class="%s">%s</button>',$type,$class,$title);
         return $xhtml;
     }
 }

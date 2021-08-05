@@ -64,26 +64,25 @@ class GroupController extends Controller
 	public function formAction()
 	{
 		$this->_view->_title = 'Group Controller :: Add';
-		// if(isset($this->_arrParam['id'])){
-		// 	$this->_view->_title = 'Group Controller :: Edit';
-		// 	$this->_arrParam['form'] = $this->_model->infoItem($this->_arrParam);
-		// }
-		if(@$this->_arrParam['form']['token'] > 0){
+		if (@isset($this->_arrParam['id']) && !@$this->_arrParam['form']['token']) {
+			$this->_view->_title = 'Group Controller :: Edit';
+			$this->_arrParam['form'] = $this->_model->infoItem($this->_arrParam);
+			if (empty($this->_arrParam['form'])) URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
+		}
+		if (@$this->_arrParam['form']['token'] > 0) {
 			$validate = new Validate($this->_arrParam['form']);
-			$validate->addRule('name','string',['min'=>3, 'max'=>30])
-					 ->addRule('group_acp','status')
-					 ->addRule('status','status');
+			$validate->addRule('name', 'string', ['min' => 3, 'max' => 30])
+				->addRule('group_acp', 'group')
+				->addRule('status', 'status');
 			$validate->run();
 			$this->_arrParam['form'] = $validate->getResult();
-			if($validate->isValid() == false){
+			if ($validate->isValid() == false) {
 				$this->_view->error = $validate->showErrors();
-			}else{
-				//Insert Database
-				echo '<pre>';
-				print_r ($this->_arrParam);
-				echo '</pre>';
-				// $this->_model->saveItem($this->_arrParam,['task'=>'add']);
-				// URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
+			} else {
+				$task = isset($this->_arrParam['id'])? 'edit' : 'add';
+				// Insert Database
+				$this->_model->saveItem($this->_arrParam,['task'=>$task]);
+				URL::redirect($this->_arrParam['module'], $this->_arrParam['controller'], 'index');
 			}
 		}
 		$this->_view->arrParam = $this->_arrParam;

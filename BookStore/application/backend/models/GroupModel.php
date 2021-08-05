@@ -1,6 +1,17 @@
 <?php
 class GroupModel extends Model
 {
+	private $_columns = [
+		'id',
+		'name',
+		'group_acp',
+		'created',
+		'created_by',
+		'modified',
+		'modified_by',
+		'status',
+		'ordering'
+	];
 	public function __construct()
 	{
 		parent::__construct();
@@ -20,11 +31,13 @@ class GroupModel extends Model
 			$query[] = "AND `status` = '{$params['status']}'";
 		}
 
+		$query[] ='ORDER BY `id` DESC';
+
 		//PAGINATION
 		$pagination = $params['pagination'];
 		$totalItemsPerPage = $pagination['totalItemsPerPage'];
-		if($totalItemsPerPage > 0){
-			$position = ($pagination['currentPage'] -1 ) * $totalItemsPerPage;
+		if ($totalItemsPerPage > 0) {
+			$position = ($pagination['currentPage'] - 1) * $totalItemsPerPage;
 			$query[] = "LIMIT $position, $totalItemsPerPage";
 		}
 		$query		= implode(' ', $query);
@@ -39,7 +52,7 @@ class GroupModel extends Model
 		$data = ['group_acp' => $groupACP];
 		$where = [['id', $params['id']]];
 		$this->update($data, $where);
-		Session::set('message',"Cập nhật GroupACP thành công!");
+		Session::set('message', "Cập nhật GroupACP thành công!");
 	}
 
 	public function changeStatus($params, $options = null)
@@ -48,7 +61,7 @@ class GroupModel extends Model
 		$data = ['status' => $status];
 		$where = [['id', $params['id']]];
 		$this->update($data, $where);
-		Session::set('message',"Cập nhật trạng thái thành công!");
+		Session::set('message', "Cập nhật trạng thái thành công!");
 	}
 
 	public function multiStatus($params, $options = null)
@@ -57,7 +70,7 @@ class GroupModel extends Model
 			$ids = implode(', ', $params['cid']);
 			$query = "UPDATE `{$this->table}` SET `status` = '{$options['task']}' WHERE `id` IN ({$ids})";
 			$this->query($query);
-			Session::set('message',"Cập nhật trạng thái thành công!");
+			Session::set('message', "Cập nhật trạng thái thành công!");
 		}
 	}
 
@@ -65,7 +78,7 @@ class GroupModel extends Model
 	{
 		$ids = isset($params['id']) ? [$params['id']] : $params['cid'];
 		$this->delete($ids);
-		Session::set('message',"Xóa thành công!");
+		Session::set('message', "Xóa thành công!");
 	}
 
 	public function countItems($params, $options = null)
@@ -82,34 +95,41 @@ class GroupModel extends Model
 			$query = implode(' ', $query);
 			$items = $this->listRecord($query);
 			$result = array_combine(array_column($items, 'status'), array_column($items, 'count'));
-			if(empty($result['inactive'])) $result =$result + ['inactive' => 0];
-			if(empty($result['active'])) $result =['active' => 0]+ $result;
+			if (empty($result['inactive'])) $result = $result + ['inactive' => 0];
+			if (empty($result['active'])) $result = ['active' => 0] + $result;
 			$result = ['all' => array_sum($result)] + $result;
 			return $result;
 		}
 	}
 	public function saveItem($params, $options = null)
 	{
-		if ($options['task'] == 'add'){
-			unset($params['form']['token']);
-			$params['form']['group_acp'] = ($params['form']['group_acp'] == 'active')? 1 : 0;
-			$params['form']['created'] = date('Y-m-d',time());
-			$params['form']['created_by'] = 'admin';
-			$this->insert($params['form']);
-			Session::set('message',"Thêm thành công!");
+		if ($options['task'] == 'add') {
+			$params['form']['created'] = date('Y-m-d G.i:s<br>', time());
+			$params['form']['created_by'] = 1;
+			$data = array_intersect_key($params['form'],array_flip($this->_columns));
+			$this->insert($data);
+			Session::set('message', "Thêm thành công!");
+		}
+		if ($options['task'] == 'edit') {
+			$params['form']['modified'] = date('Y-m-d G.i:s<br>', time());
+			$params['form']['modified_by'] = 10;
+			$data = array_intersect_key($params['form'],array_flip($this->_columns));
+			$this->update($data,[['id',$params['id']]]);
+			Session::set('message', "Sửa thành công!");
+			
+			
 		}
 	}
 	public function infoItem($params, $options = null)
 	{
-		
-		if($options == null){
-			$query[] 	= "SELECT  `name`, `group_acp`, `status`";
+
+		if ($options == null) {
+			$query[] 	= "SELECT  `id`, `name`, `group_acp`, `status`";
 			$query[]	= "FROM `{$this->table}`";
 			$query[]	= "WHERE `id` = {$params['id']}";
 			$query = implode(' ', $query);
 			$result = $this->singleRecord($query);
 			return $result;
-
 		}
 	}
 }

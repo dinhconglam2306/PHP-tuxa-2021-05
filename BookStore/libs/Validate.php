@@ -159,8 +159,8 @@ class Validate{
 	
 	// Validate GroupID
 	private function validateGroupID($element){
-		if($this->source[$element] == 0){
-			$this->setError($element, 'Select group');
+		if($this->source[$element] == 'default'){
+			$this->setError($element, 'Hãy chọn giá trị khác với giá trị mặc định!');
 		}
 	}
 	

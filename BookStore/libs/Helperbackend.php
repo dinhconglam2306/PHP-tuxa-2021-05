@@ -105,12 +105,13 @@ class HelperBackend
     {
         $xhtml = '';
         if (!empty($message)) {
-            $xhtml = '<div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <ul class="list-unstyled mb-0">
-                <li class="text-white">' . $message . '</li>
-            </ul>
-        </div>';
+            $xhtml = '
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <ul class="list-unstyled mb-0">
+                    <li class="text-white">' . $message . '</li>
+                </ul>
+            </div>';
         }
         return $xhtml;
     }

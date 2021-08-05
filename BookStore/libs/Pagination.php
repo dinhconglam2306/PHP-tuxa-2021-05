@@ -25,16 +25,16 @@ class Pagination
 			$start =  ' <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-angle-double-left"></i></a></li>';
 			$prev =  '<li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-angle-left"></i></a></li>';
 			if ($this->currentPage > 1) {
-				$start =  '<li class="page-item"><a class="page-link" href="' . $link . '&page=1"><i class="fas fa-angle-double-left"></i></a></li>';
-				$prev =  '<li class="page-item"><a class="page-link" href="' . $link . '&page=' . ($this->currentPage - 1) . '"><i class="fas fa-angle-left"></i></a></li>';
+				$start =  sprintf('<li class="page-item"><a class="page-link" href="%s&page=1"><i class="fas fa-angle-double-left"></i></a></li>', $link);
+				$prev =  sprintf('<li class="page-item"><a class="page-link" href="%s&page=%s"><i class="fas fa-angle-left"></i></a></li>', $link, ($this->currentPage - 1));
 			}
 
 			$next =  '<li class="page-item disabled"><a class="page-link"><i class="fas fa-angle-right"></i></a></li>';
 			$end =  '<li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-angle-double-right"></i></a></li>';
 			if ($this->currentPage < $this->totalPage) {
 
-				$next =  '<li class="page-item"><a class="page-link" href="' . $link . '&page=' . ($this->currentPage + 1) . '"><i class="fas fa-angle-right"></i></a></li>';
-				$end = 	'<li class="page-item"><a class="page-link" href="' . $link . '&page=' . $this->totalPage . '"><i class="fas fa-angle-double-right"></i></a></li>';
+				$next =  sprintf('<li class="page-item"><a class="page-link" href="%s&page=%s"><i class="fas fa-angle-right"></i></a></li>', $link, ($this->currentPage + 1));
+				$end = 	sprintf('<li class="page-item"><a class="page-link" href="%s&page=%s"><i class="fas fa-angle-double-right"></i></a></li>', $link, $this->totalPage);
 			}
 			$listPage = '';
 
@@ -63,16 +63,15 @@ class Pagination
 			}
 			for ($i =  $startPage; $i <= $endPage; $i++) {
 				if ($i == $this->currentPage) {
-					$listPage .= '<li class="page-item active"><a class="page-link" href="#">' . $i . '</a></li>';
+					$listPage .= sprintf('<li class="page-item active"><a class="page-link" href="#">%s</a></li>', $i);
 				} else {
-					$listPage .= '<li class="page-item"><a class="page-link" href="' . $link . '&page=' . $i . '">' . $i . '</a></li>';
+					$listPage .= sprintf('<li class="page-item"><a class="page-link" href="%s&page=%s">%s</a></li>', $link, $i, $i);
 				}
 			}
-			$paginationHTML = '<div class="card-footer clearfix"> 
-								<ul class="pagination m-0 float-right">'
-									. $start . $prev . $listPage . $next . $end .
-								'</ul>
-							  </div>';
+			$paginationHTML = sprintf('
+			<div class="card-footer clearfix"> 
+				<ul class="pagination m-0 float-right">%s%s%s%s%s</ul>
+			</div>', $start, $prev, $listPage, $next, $end);
 		}
 
 		return $paginationHTML;

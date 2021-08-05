@@ -27,7 +27,19 @@ $(document).ready(function () {
                 url = url.replace('value_new', action);
                 console.log(url);
                 tableForm.attr('action', url);
-                tableForm.submit();
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Xác nhận thực hiện action!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                        tableForm.submit();
+                    }
+                  })
             } else {
                 Swal.fire({
                     position: 'top-end',
